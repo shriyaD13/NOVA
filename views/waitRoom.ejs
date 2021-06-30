@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href ='../popper.min.js'>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <title>Teams</title>
+</head>
+<body style="height: 100vh;">
+    
+    <nav class="navbar navbar-dark bg-dark">
+      <div class="container-fluid d-flex justify-content-center" >
+          <h6 style="color: ivory;" >Microsoft Teams</h6>
+      </div>
+    </nav>
+    <div class="mt-5 conatiner meeting-info d-flex justify-content-center align-items-center flex-column">
+      <h5>Share this url for others to join</h5>
+        <div class="d-flex text-center">
+          <p class="meet-url mx-4"><h6>Meeting URL- </h6><%- meetingUrl -%> </p>
+          <button class="ms-3 copyBtn btn btn-primary">Copy</button>
+        </div>
+
+      <div class="text-center">
+        <h6>You can join the meeting by clicking the button below</h6>
+        <button class="btn btn-primary" ><a href='/<%- meetingID %> ' style="text-decoration: none; color: ivory;">Join Now</a></button>
+      </div>
+    </div>
+    <script>
+      const copyBtn = document.querySelector(".copyBtn");
+      copyBtn.onclick = () => {
+        const elem = document.createElement('textarea');
+        elem.value = '<%- meetingUrl %>';
+        document.body.appendChild(elem);
+        elem.select();
+        document.execCommand('copy');
+        document.body.removeChild(elem);
+      }
+    </script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+
+body{
+    background-color: black !important;
+    height: 100vh;
+}
+
+#me video{
+    position: relative !important;
+}
+#remote-container{
+    display: flex;
+}
+#remote-container video, #screen-window video{
+    height: auto;
+    padding: 2px;
+    position: relative !important;
+}
+
+.icon{
+    font-size: 200%;
+}
+
+.control{
+    cursor: pointer;
+}
+
+.control:hover{
+    background-color: #c2c0c0;
+    border-radius: 5px;
+}
+
+.unmute{
+    color: red;
+}
+
+.end-call i{
+    color: red !important;
+}
+
+.dropdown-toggle::after {
+    content: none !important;
+}
+
+.dropdown-menu{
+    background-color: rgb(121, 121, 121) !important;
+    color: rgb(7, 7, 7) !important;
+    font-size: medium !important;
+    font-weight: bold;
+}
+
+.chat_window{
+    display: none;
+    background: rgb(153, 153, 153);
+}
+
+#chat_message{
+    background-color: transparent;
+    border: none;
+    color: white;
+}

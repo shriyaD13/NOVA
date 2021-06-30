@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="style.css">
+  <title>Teams</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+</head>
+<body>
+  <div class="main_container d-flex  flex-column justify-content-center align-items-center h-100">
+      <div class="video-container d-flex justify-content-between align-items-center flex-grow-1">
+        <div id="remote-container" class=" d-flex justify-content-center align-items-center"></div>
+        <div class="chat_window h-100">
+          <div class="d-flex flex-column flex-grow-1" style="width: 15vw;">
+            <h2 class="text-center" style="color: ivory;">Chats</h2>
+            <div class="main__chat_window flex-grow-1">
+              <ul class="messages" style="list-style: none;"></ul>
+           </div>
+            <div class="main__message_container">
+              <input id="chat_message" type="text" placeholder="Type message here..." class="w-100">
+           </div>
+          </div>
+        </div>
+      </div>
+    <div class="main_controls d-flex justify-content-center align-items-center p-2" style="background-color: rgb(121, 121, 121); width: 100vw;">
+      <div class="mute-btn control d-flex flex-column align-items-center p-2" onclick="audioToggle()"> 
+        <i class="fas fa-microphone icon"></i>
+        <span>Mute</span>
+      </div>
+      <div class="stop-video control d-flex flex-column align-items-center p-2" onclick="videoToggle()">
+        <i class="fas fa-video icon"></i>
+        <span>Stop Video</span>
+      </div>
+      <div class="end-call control d-flex flex-column align-items-center p-2">
+        <a href="/home"  onclick="endCall()"><i class="fas fa-phone-slash icon"></i></a>
+        <span>End Call</span>
+      </div>
+      <div class="share-screen control d-flex flex-column align-items-center p-2" onclick="shareScreen()">
+        <i class="fas fa-tv icon" id="shareScreenIcon"></i>
+        <span id="shareScreenText">Share screen</span>
+      </div>
+      <div class="chat-window control d-flex flex-column align-items-center p-2" onclick="chatWindow()">
+        <i class="fas fa-comments icon"></i>
+        <span>Chat</span>
+      </div>
+      <div class="more-options control d-flex flex-column align-items-center p-2 dropup">
+        <i class="fas fa-ellipsis-v icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></i>
+        <span>More</span>
+        <div class="dropdown-menu" style="width: 250px;">
+          <ul class="m-0 p-0">
+            <div class="beauty-effect m-2 d-flex justify-content-between" role = "button" onclick="beautyModeToggle()">
+              <span id="beautyEffectText">Beauty Effect</span>
+              <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                  width="24" height="24"
+                  viewBox="0 0 172 172"
+                  style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><g fill="#f1c40f"><path d="M111.08333,35.83333l-17.91667,43l-43,17.91667l43,17.91667l17.91667,43l17.91667,-43l43,-17.91667l-43,-17.91667zM29.5625,56.4375l9.85417,29.5625l9.85417,-29.5625l29.5625,-9.85417l-29.5625,-9.85417l-9.85417,-29.5625l-9.85417,29.5625l-29.5625,9.85417zM45.6875,133.47917l-6.27083,-18.8125l-6.27083,18.8125l-18.8125,6.27083l18.8125,6.27083l6.27083,18.8125l6.27083,-18.8125l18.8125,-6.27083z"></path></g></g></svg>
+            </div>
+          </ul>
+        </div>
+      </div>
+  </div>
+  </div>
+    
+    
+<!--
+  Import the Agora Video Call SDK for Web and local calls to it.
+-->
+<script src="https://kit.fontawesome.com/2a68af24ec.js" crossorigin="anonymous"></script>
+<script src="AgoraRTC_N-4.5.0.js"></script>
+<script src="agora-rtm-sdk-1.4.3.js"></script>
+<script src="basicVideoCall.js"></script>
+</body>
+</html>
