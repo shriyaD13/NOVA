@@ -115,7 +115,6 @@ const basicCalls = async() =>{
       });
     })
   }
-
   // Function to join a channel 
 const join = async () =>{
     const cameraTrack = await AgoraRTC.createCameraVideoTrack();
