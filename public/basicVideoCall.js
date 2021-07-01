@@ -15,12 +15,12 @@ const client = AgoraRTC.createClient({
     appid: "1e1b09b367354e35a77c2dba670d76ad",
     channel: "myChannel",
     uid: null,
-    token: "0061e1b09b367354e35a77c2dba670d76adIAAu/LTuv3rVmqGffLLNGHxaxSXscp5zcTrYzWSagvtTPkOQEggAAAAAEAAm+nFWo/7dYAEAAQCk/t1g"
+    token: "0061e1b09b367354e35a77c2dba670d76adIACzSTBDn8Ku2MKoYe8KlE7q3ktV7gONu1wwRM24KaacIkOQEggAAAAAEAAm+nFWTVHfYAEAAQBMUd9g"
   };
 
 let RTMoptions = {
     uid: "sd",
-    token: "0061e1b09b367354e35a77c2dba670d76adIAAU34rgwmfSRWlkbCVZCymbTm/PPVlXuGJdz5CAWzkxV4udFA8AAAAAEAClcAAVnADeYAEA6AOcAN5g"
+    token: "0061e1b09b367354e35a77c2dba670d76adIAAnFuTvoGTUl/thIFrPMMtfOoiad6JLE5WVDLctRwcGHIudFA8AAAAAEAA8WHNmDlLfYAEA6AMOUt9g"
 }
 
 const avatar = "https://avataaars.io/?accessoriesType=Prescription02&avatarStyle=Circle&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&facialHairType=Blank&hatColor=Black&mouthType=Default&topType=LongHairFro"

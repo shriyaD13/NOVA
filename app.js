@@ -7,6 +7,7 @@ const { urlencoded } = require('express');
 const firebase = require("firebase/app");
 require("firebase/auth");
 const admin = require('firebase-admin');
+const { v4: uuidV4 } = require('uuid')
 
 
 // firebase configurations
@@ -143,7 +144,7 @@ app.get('/chat', (req,res) =>{
 // waiting room
 // let meetingID;
 app.get('/callWait', (req,res)=>{
-  meetingID = uuidv4();
+  meetingID = uuidV4();
   const meetingUrl = `http://localhost:3000/${meetingID}`;
   res.render('waitRoom', {meetingUrl, meetingID});
 })
