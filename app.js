@@ -8,7 +8,7 @@ const firebase = require("firebase/app");
 require("firebase/auth");
 const admin = require('firebase-admin');
 const { v4: uuidV4 } = require('uuid')
-
+const {RtcTokenBuilder, RtmTokenBuilder, RtcRole, RtmRole} = require('agora-access-token')
 
 // firebase configurations
 const firebaseConfig = {
@@ -145,14 +145,36 @@ app.get('/chat', (req,res) =>{
 // let meetingID;
 app.get('/callWait', (req,res)=>{
   meetingID = uuidV4();
-  const meetingUrl = `http://localhost:3000/${meetingID}`;
+  const meetingUrl = `https://evening-brushlands-56347.herokuapp.com/${meetingID}`;
   res.render('waitRoom', {meetingUrl, meetingID});
 })
+
+
+const generateToken = (uid) =>{
+  const options = {
+    appid: "1e1b09b367354e35a77c2dba670d76ad",
+    channel: "myChannel",
+    certificate: "ca4737d406234493a87967c1ed6eefac",
+  };
+  const expirationTimeInSeconds = 3600
+
+  const currentTimestamp = Math.floor(Date.now() / 1000)
+
+  const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds;
+
+  const RTMtoken = RtmTokenBuilder.buildToken(options.appid, options.certificate, uid, RtmRole, privilegeExpiredTs);
+
+  // console.log("Rtm Token: " + RTMtoken);
+  return RTMtoken;
+}
+
 
 // video calling room
 app.get('/:id', (req,res) =>{
   // res.send("yayay");
-  res.render('room')
+  const uid = uuidV4();
+  const RTMtoken = generateToken(uid);
+  res.render('room', {RTMtoken,uid});
 })
  
 

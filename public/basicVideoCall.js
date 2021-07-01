@@ -9,18 +9,19 @@ const client = AgoraRTC.createClient({
    codec: "vp8" 
 });
 
-
+// console.log(RTMtoken);
 // Agora config 
   var options = {
     appid: "1e1b09b367354e35a77c2dba670d76ad",
     channel: "myChannel",
-    uid: null,
-    token: "0061e1b09b367354e35a77c2dba670d76adIACzSTBDn8Ku2MKoYe8KlE7q3ktV7gONu1wwRM24KaacIkOQEggAAAAAEAAm+nFWTVHfYAEAAQBMUd9g"
+    token: "0061e1b09b367354e35a77c2dba670d76adIABq4nZrSM1ZlmvKC0aa717pYfHlh3om6LB0ZMme/C7q5UOQEggAAAAAEACqPfBqUH3fYAEAAQBOfd9g"
   };
 
+  // console.log(RTMtoken);
+
 let RTMoptions = {
-    uid: "sd",
-    token: "0061e1b09b367354e35a77c2dba670d76adIAAnFuTvoGTUl/thIFrPMMtfOoiad6JLE5WVDLctRwcGHIudFA8AAAAAEAA8WHNmDlLfYAEA6AMOUt9g"
+    uid: uid,
+    token: RTMtoken
 }
 
 const avatar = "https://avataaars.io/?accessoriesType=Prescription02&avatarStyle=Circle&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&facialHairType=Blank&hatColor=Black&mouthType=Default&topType=LongHairFro"
@@ -89,11 +90,13 @@ const basicCalls = async() =>{
         }
       });
 
+
       channel.on('ChannelMessage',  (message, memberId) => {
         console.log("recieved")
+        // console.log(message);
         const html = 
       `<h6>Friend</h6>
-      ${text.val()}`;
+      ${message.text}`;
       document.querySelector(".messages").appendChild(document.createElement('li')).innerHTML = html;
     })
   }
@@ -242,7 +245,7 @@ const beautyModeToggle = async() => {
   if(!beautyModeState)
   {
     beautyModeState = true;
-    await localTracks.videoTrack.setBeautyEffect(true, { lighteningLevel: 0.5, rednessLevel: 0.5, smoothnessLevel: 0.9 });
+    await localTracks.videoTrack.setBeautyEffect(true, { lighteningLevel: 0.7, rednessLevel: 0.8, smoothnessLevel: 0.9 });
     console.log("enable beauty success");
     document.getElementById("beautyEffectText").innerHTML = `Disable Beauty Effect`;
   } else {
