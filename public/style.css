@@ -58,3 +58,31 @@ body{
     border: none;
     color: white;
 }
+
+.placeHolder{
+    width: 489.6px; 
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: blueviolet 2px solid;
+}
+
+.player_wrapper{
+    position: relative;
+}
+#avatar{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 489.6px; 
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: blueviolet 2px solid;
+}
+
+.users{
+    z-index: 9;
+}

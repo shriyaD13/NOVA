@@ -14,6 +14,7 @@ const peerServer = ExpressPeerServer(server, {
   debug: true
 })
 
+
 // firebase configurations
 const firebaseConfig = {
     apiKey: "AIzaSyCGuC1xU-H4HdF2Oh9jqmBNXrWMbO4V-QA",

@@ -1,3 +1,8 @@
+// avatar
+// import { AvatarGenerator } from 'random-avatar-generator';
+// const generator = new AvatarGenerator();
+
+
 // Initialize the agora client
 const client = AgoraRTC.createClient({
    mode: "rtc", 
@@ -18,6 +23,7 @@ let RTMoptions = {
     token: "0061e1b09b367354e35a77c2dba670d76adIAAU34rgwmfSRWlkbCVZCymbTm/PPVlXuGJdz5CAWzkxV4udFA8AAAAAEAClcAAVnADeYAEA6AOcAN5g"
 }
 
+const avatar = "https://avataaars.io/?accessoriesType=Prescription02&avatarStyle=Circle&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&facialHairType=Blank&hatColor=Black&mouthType=Default&topType=LongHairFro"
 
   // chat config
 const chatClient = AgoraRTM.createInstance(options.appid);
@@ -33,6 +39,7 @@ let channel = chatClient.createChannel("demoChannel")
     videoTrackEnabled: true,
     audioTrackEnabled: true
   }
+  let localUID;
 
 
 
@@ -50,17 +57,38 @@ const basicCalls = async() =>{
           audioTrack.play();
         } else {
           const videoTrack = user.videoTrack;
-          const player = $(`
-                      <div id="player-wrapper-${uid}">
-                        <div id="player-${uid}" class="player"></div>
+          if(!document.getElementById(`player-wrapper-${uid}`)) {
+                const player = $(`
+                      <div id="player-wrapper-${uid}" class="player_wrapper">
+                      <div id="avatar">
+                        <img src =${avatar} alt = "robot"></img>
+                      </div>
+                      <div id="player-${uid}" class="player users"></div>
                       </div>
                     `);
           $("#remote-container").append(player);
+
+          }
+          document.getElementById("avatar").style.setProperty('position', 'absolute');
           videoTrack.play(`player-${uid}`);
           // Play the video
         }
         
       });
+      client.on("user-left", async(user) =>{
+        const id = user.uid;
+        $(`#player-wrapper-${id}`).remove();
+      });
+
+      client.on("user-unpublished", user => {
+        const uid = user.uid;
+        console.log(`player-${uid}`);
+        const elem = document.getElementById(`player-${uid}`);
+        if(elem && elem.childElementCount == 0) {
+          document.getElementById("avatar").style.setProperty('position', 'inherit');
+        }
+      });
+
       channel.on('ChannelMessage',  (message, memberId) => {
         console.log("recieved")
         const html = 
@@ -85,6 +113,7 @@ const join = async () =>{
     `);
       $("#remote-container").append(player);
       cameraTrack.play(`player-${uid}`);
+      localUID = uid;
     });
     await client.publish([microphoneTrack, cameraTrack]).then(()=> console.log("published"));
     await chatClient.login(RTMoptions);
@@ -97,14 +126,34 @@ const endCall = async() =>{
     await client.leave();
     await channel.leave();
     await chatClient.logout()
+    // const elem = document.getElementById("remote-container");
+    // elem.removeChild(elem.lastChild)
     console.log("left");
 }
 
 // switch video  on/off
+let prevHtml;
+const changeDisplay = () =>{
+  const element = document.getElementById(`player-${localUID}`);
+  prevHtml = element.innerHTML;
+  const html = 
+  `<div class="placeHolder">
+  <img src =${avatar} alt = "robot"></img>
+  </div>`
+  element.innerHTML = html;
+}
+
+const unchangeDisplay = () =>{
+  const element = document.getElementById(`player-${localUID}`);
+  element.innerHTML = "";
+}
+
 const videoToggle = async() =>{
     if (localTrackState.videoTrackEnabled) {
         muteVideo();
+        changeDisplay();
       } else {
+        unchangeDisplay();
         unmuteVideo();
       }
 }
