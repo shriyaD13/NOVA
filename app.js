@@ -37,7 +37,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static('public'));
 app.use(urlencoded({extended: true}));
 app.use(cors())
-app.use('/peerjs' ,peerServer);
 // base routre
 app.get('/', (req, res) =>{
     res.render('home');
