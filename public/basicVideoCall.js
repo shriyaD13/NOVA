@@ -9,6 +9,10 @@ const client = AgoraRTC.createClient({
    codec: "vp8" 
 });
 
+// Enable audio/volume indicator for detecting the active speaker
+client.enableAudioVolumeIndicator();
+
+
 // console.log(RTMtoken);
 // Agora config 
   var options = {
@@ -99,11 +103,21 @@ const basicCalls = async() =>{
       ${message.text}`;
       document.querySelector(".messages").appendChild(document.createElement('li')).innerHTML = html;
     })
+
+    client.on("volume-indicator", volumes => {
+      volumes.forEach((volume, index) => {
+        if(volume.level > 5) {
+          document.getElementById(`player-wrapper-${volume.uid}`).style.border = "green 3px solid";
+        } else {
+          document.getElementById(`player-wrapper-${volume.uid}`).style.border = "0px";
+        }
+        console.log(`${index} UID ${volume.uid} Level ${volume.level}`);
+      });
+    })
   }
 
   // Function to join a channel 
 const join = async () =>{
-    // const [microphoneTrack, cameraTrack] = await AgoraRTC.createMicrophoneAudioTrack();
     const cameraTrack = await AgoraRTC.createCameraVideoTrack();
     const microphoneTrack = await AgoraRTC.createMicrophoneAudioTrack();
     localTracks.audioTrack = microphoneTrack;
@@ -119,9 +133,12 @@ const join = async () =>{
       localUID = uid;
     });
     await client.publish([microphoneTrack, cameraTrack]).then(()=> console.log("published"));
+    
+    // login and join RTM 
     await chatClient.login(RTMoptions);
     await channel.join();
-    // console.log(uid);
+
+
 }
 
 // End call function
