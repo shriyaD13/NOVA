@@ -1,8 +1,3 @@
-// avatar
-// import { AvatarGenerator } from 'random-avatar-generator';
-// const generator = new AvatarGenerator();
-
-
 // Initialize the agora client
 const client = AgoraRTC.createClient({
    mode: "rtc", 
@@ -13,16 +8,12 @@ const client = AgoraRTC.createClient({
 client.enableAudioVolumeIndicator();
 
 
-// console.log(RTMtoken);
 // Agora config 
-  var options = {
+let options = {
     appid: "1e1b09b367354e35a77c2dba670d76ad",
     channel: "myChannel",
     token: "0061e1b09b367354e35a77c2dba670d76adIABq4nZrSM1ZlmvKC0aa717pYfHlh3om6LB0ZMme/C7q5UOQEggAAAAAEACqPfBqUH3fYAEAAQBOfd9g"
   };
-
-  // console.log(RTMtoken);
-
 let RTMoptions = {
     uid: uid,
     token: RTMtoken
@@ -30,26 +21,29 @@ let RTMoptions = {
 
 const avatar = "https://avataaars.io/?accessoriesType=Prescription02&avatarStyle=Circle&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&facialHairType=Blank&hatColor=Black&mouthType=Default&topType=LongHairFro"
 
-  // chat config
+// chat config
 const chatClient = AgoraRTM.createInstance(options.appid);
 let channel = chatClient.createChannel("demoChannel")
 
 // Users' own track 
-  var localTracks = {
-    videoTrack: null,
-    audioTrack: null
-  };
+let localTracks = {
+  videoTrack: null,
+  audioTrack: null
+};
 
-  var localTrackState = {
-    videoTrackEnabled: true,
-    audioTrackEnabled: true
-  }
-  let localUID;
+let localTrackState = {
+  videoTrackEnabled: true,
+  audioTrackEnabled: true
+}
+
+// avriable to stire the local tracks id
+let localUID;
 
 
 
-// Basic functions for recieving and answering a call
+// Basic functions for recieving and answering requests
 const basicCalls = async() =>{
+  // User published event listener
     client.on("user-published", async (user, mediaType) => {
         // Initiate the subscription
         await client.subscribe(user, mediaType);
@@ -76,15 +70,10 @@ const basicCalls = async() =>{
           }
           document.getElementById("avatar").style.setProperty('position', 'absolute');
           videoTrack.play(`player-${uid}`);
-          // Play the video
         }
-        
-      });
-      client.on("user-left", async(user) =>{
-        const id = user.uid;
-        $(`#player-wrapper-${id}`).remove();
       });
 
+      // listener for when user unpublishes
       client.on("user-unpublished", user => {
         const uid = user.uid;
         console.log(`player-${uid}`);
@@ -94,7 +83,15 @@ const basicCalls = async() =>{
         }
       });
 
+      //event listener for a user leaving
+      client.on("user-left", async(user) =>{
+        const id = user.uid;
+        $(`#player-wrapper-${id}`).remove();
+      });
 
+
+
+      // Listener for messages in channel 
       channel.on('ChannelMessage',  (message, memberId) => {
         console.log("recieved")
         // console.log(message);
@@ -104,6 +101,7 @@ const basicCalls = async() =>{
       document.querySelector(".messages").appendChild(document.createElement('li')).innerHTML = html;
     })
 
+    //voleme indicator to detect the active speaker
     client.on("volume-indicator", volumes => {
       volumes.forEach((volume, index) => {
         if(volume.level > 5) {
@@ -111,10 +109,12 @@ const basicCalls = async() =>{
         } else {
           document.getElementById(`player-wrapper-${volume.uid}`).style.border = "0px";
         }
-        console.log(`${index} UID ${volume.uid} Level ${volume.level}`);
+        // console.log(`${index} UID ${volume.uid} Level ${volume.level}`);
       });
     })
   }
+
+
   // Function to join a channel 
 const join = async () =>{
     const cameraTrack = await AgoraRTC.createCameraVideoTrack();
@@ -136,8 +136,6 @@ const join = async () =>{
     // login and join RTM 
     await chatClient.login(RTMoptions);
     await channel.join();
-
-
 }
 
 // End call function
@@ -145,16 +143,12 @@ const endCall = async() =>{
     await client.leave();
     await channel.leave();
     await chatClient.logout()
-    // const elem = document.getElementById("remote-container");
-    // elem.removeChild(elem.lastChild)
     console.log("left");
 }
 
 // switch video  on/off
-let prevHtml;
 const changeDisplay = () =>{
   const element = document.getElementById(`player-${localUID}`);
-  prevHtml = element.innerHTML;
   const html = 
   `<div class="placeHolder">
   <img src =${avatar} alt = "robot"></img>
@@ -284,8 +278,6 @@ const chatWindow = async() =>{
     chatWindowState = false;
   }
 }
-
-
   // when press enter send message
 $('html').keydown(async (e) => {
   let text = $("input");
