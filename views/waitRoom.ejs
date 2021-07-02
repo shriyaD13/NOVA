@@ -4,10 +4,18 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/galaxy.png">
     <link href ='../popper.min.js'>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <title>Teams</title>
+
+    <style>
+      .copyIcon:active{
+        transform: translateY(4px);
+      }
+    </style>
 </head>
 <body style="height: 100vh;">
     
@@ -16,28 +24,37 @@
           <h6 style="color: ivory;" >Microsoft Teams</h6>
       </div>
     </nav>
-    <div class="mt-5 conatiner meeting-info d-flex justify-content-center align-items-center flex-column">
-      <h5>Share this url for others to join</h5>
-        <div class="d-flex text-center">
-          <p class="meet-url mx-4"><h6>Meeting URL- </h6><%- meetingUrl -%> </p>
-          <button class="ms-3 copyBtn btn btn-primary">Copy</button>
-        </div>
-
-      <div class="text-center">
-        <h6>You can join the meeting by clicking the button below</h6>
-        <button class="btn btn-primary" ><a href='/<%- meetingID %> ' style="text-decoration: none; color: ivory;">Join Now</a></button>
+    <div class="container d-flex justify-content-center align-items-center h-100" style="width: 30%;">
+      <div class="card shadow">
+          <img src="https://thumbs.dreamstime.com/b/video-conferencing-virtual-meeting-desktop-computer-colleagues-group-office-teamwork-friends-meet-software-e-learning-chat-195269697.jpg"
+              alt="" class="card-img-top" />
+          <div class="card-body">
+              <h4 class="card-title text-center">Meeting room created</h4>
+              <div class="mt-5">
+                <h5>Share this code for others to join the room</h5>
+                <h6 class="mt-5">Meeting Code</h6>
+                <div class="input-group mb-3">
+                  <input type="text" class="form-control code" placeholder="<%= meetingID %>" readonly>
+                  <span class="input-group-text copybtn" data-bs-toggle="tooltip" data-bs-placement="top"  title="copy" style="cursor: pointer;">
+                    <img onclick="copy()" class = "copyIcon" src="https://img.icons8.com/color/30/000000/copy--v2.png"/>
+                  </span>
+                </div>
+              </div>
+              <h6 class="text-center">OR</h6>
+              <div class="email_invite mt-3">
+                  <h6>Send an invite link</h6>
+                  <div class="input-group mb-3">
+                    <input type="email" class="form-control inviteEmail" placeholder="Email" aria-label="Recipient's username" aria-describedby="button-addon2" required>
+                    <button class="btn btn-outline-secondary" type="button" id="invitebtn" onclick="sendInvite()">Invite</button>
+                  </div>
+              </div>
+            <button class="btn btn-success btn-block" style="width: 100%;" onclick="joinMeeting()">Join Now</button>
+          </div>
       </div>
     </div>
-    <script>
-      const copyBtn = document.querySelector(".copyBtn");
-      copyBtn.onclick = () => {
-        const elem = document.createElement('textarea');
-        elem.value = '<%- meetingUrl %>';
-        document.body.appendChild(elem);
-        elem.select();
-        document.execCommand('copy');
-        document.body.removeChild(elem);
-      }
-    </script>
+<script>
+  const meetingID = '<%= meetingID %>'
+</script>
+<script src="waitRoom.js"></script>
 </body>
 </html>

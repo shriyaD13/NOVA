@@ -45,7 +45,6 @@ app.get('/', (req, res) =>{
 
 
 // user authentication
-let name1,username1,email1;
 
 app.get('/signIn', (req,res)=>{
     res.render('signIn');
@@ -55,7 +54,12 @@ app.get('/signUp', (req,res)=>{
     res.render('signUp');
 })
 app.get('/home', (req,res) =>{
-    res.render('teamsHome' , {name1,username1, email1});
+    const name  = req.query.param1;
+    const username  = req.query.param2;
+    const email  = req.query.param3;
+    const avatar = req.query.param4;
+    // console.log(avatar);
+    res.render('teamsHome' , {name,username, email,avatar});
 })
 
 app.get('/calls', (req,res)=>{
@@ -80,13 +84,10 @@ app.post('/signUp', async(req,res) =>{
     }
     await firebase.auth().createUserWithEmailAndPassword(email, password)
   .then((userCredential) => {
-    const data = { name, username, email};
+    const avatar = `https://robohash.org/${username}`
+    const data = { name, username, email, avatar};
     addUser(data);
-    // const user = userCredential.user;
-    name1 = name;
-    username1 = username;
-    email1 = email;
-    res.redirect('/home');
+    res.redirect(`/home/?param1=${name}&param2=${username}&param3=${email}&param4=${avatar}`);
   })
   .catch((error) => {
     var errorCode = error.code;
@@ -111,6 +112,7 @@ app.post('/signIn', async (req,res) =>{
   .then((userCredential) => {
     // Signed in
     // const user = userCredential.user;
+    // console.log(userCredential.user);
     console.log("Signin successful");
     flag = 1;
     // ...
@@ -124,11 +126,8 @@ app.post('/signIn', async (req,res) =>{
   if(flag)
   {
     const userInfo = await getUser(email);
-    const {name, username} = userInfo.data();
-    name1 = name;
-    username1 = username;
-    email1 = email;
-    res.redirect('/home');
+    const {name, username, avatar} = userInfo.data();
+    res.redirect(`/home/?param1=${name}&param2=${username}&param3=${email}&param4=${avatar}`);
   } else {
     res.redirect('/');
   }
@@ -136,9 +135,19 @@ app.post('/signIn', async (req,res) =>{
 
 
 // Chat
+let username1 = "123";
 app.get('/chat', (req,res) =>{
-  res.render('chat');
+  if(username1) {
+    const RTMtoken = generateToken(username1);
+  res.render('chat', {username1, RTMtoken});
+  } else res.redirect('/');
 })
+
+// Join Call
+app.get('/joinCall', (req,res) =>{
+  res.render('joinCall');
+})
+
 
 // https://evening-brushlands-56347.herokuapp.com/
 // waiting room
@@ -148,7 +157,6 @@ app.get('/callWait', (req,res)=>{
   const meetingUrl = `https://evening-brushlands-56347.herokuapp.com/${meetingID}`;
   res.render('waitRoom', {meetingUrl, meetingID});
 })
-
 
 const generateToken = (uid) =>{
   const options = {

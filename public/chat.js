@@ -1,13 +1,11 @@
 var options = {
     appid: "1e1b09b367354e35a77c2dba670d76ad",
     channel: "myChannel",
-    uid: null,
-    token: "0061e1b09b367354e35a77c2dba670d76adIAAu/LTuv3rVmqGffLLNGHxaxSXscp5zcTrYzWSagvtTPkOQEggAAAAAEAAm+nFWo/7dYAEAAQCk/t1g"
   };
 
   let RTMoptions = {
-    uid: "sd",
-    token: "0061e1b09b367354e35a77c2dba670d76adIAAU34rgwmfSRWlkbCVZCymbTm/PPVlXuGJdz5CAWzkxV4udFA8AAAAAEAClcAAVnADeYAEA6AOcAN5g"
+    uid: username,
+    token: RTMtoken
 }
 
 // const client = AgoraRTC.createClient({
@@ -17,9 +15,17 @@ var options = {
  
  const client = AgoraRTM.createInstance(options.appid);
 
+ client.on('ConnectionStateChanged', (newState, reason) => {
+    console.log('reason', reason)
+    const view = $('<li/>', {
+      text: ['newState: ' + newState, ', reason: ', reason].join('')
+    })
+    $('.Peermsg').append(view)
+  })
+
  client.on('MessageFromPeer', function (message, peerId) {
 
-    document.querySelector(".Peermsg").appendChild(document.createElement('li')).append("Message from: " + peerId + " Message: " + message)
+    document.querySelector(".Peermsg").appendChild(document.createElement('li')).append("Message from: " + peerId + " Message: " + message.text)
 })
 
 const basicCalls = async() =>{
@@ -30,6 +36,16 @@ document.getElementById("sendMsg").onclick = async() => {
 
     let peerId = document.getElementById("peerID").value.toString()
     let peerMessage = document.getElementById("PeerMessage").value.toString()
+
+    client.queryPeersOnlineStatus([peerId]).then((res) => {
+        const view = $('<li/>', {
+          text: 'memberId: ' + peerId + ', online: ' + res[peerId]
+        })
+        $('.Peermsg').append(view)
+      }).catch((err) => {
+        // Toast.error('query peer online status failed, please open console see more details.')
+        console.error(err);
+      })
 
     await client.sendMessageToPeer(
         { text: peerMessage },
@@ -45,5 +61,10 @@ document.getElementById("sendMsg").onclick = async() => {
 
         }
     })
+}
+
+const logOut = async() =>{
+    client.logout();
+    console.log("left");
 }
 basicCalls();

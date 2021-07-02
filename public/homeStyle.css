@@ -1,0 +1,32 @@
+#profileImg{
+    height:45px !important;
+}
+
+.header{
+    color: ivory !important;
+    flex-grow: 1;
+    text-align: center;
+}
+
+.profile{
+    border-radius: 50px;
+    background-color: #666770bd;
+    cursor: pointer;
+}
+
+.dropdown-toggle::after {
+    content: none !important;
+}
+
+
+.dropdown-menu.show {
+    display: flex !important;
+    align-content: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: flex-start;
+    right: 0;
+}
+.dropdown-menu[data-bs-popper]{
+    left: auto !important;
+}

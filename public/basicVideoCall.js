@@ -12,7 +12,7 @@ client.enableAudioVolumeIndicator();
 let options = {
     appid: "1e1b09b367354e35a77c2dba670d76ad",
     channel: "myChannel",
-    token: "0061e1b09b367354e35a77c2dba670d76adIABq4nZrSM1ZlmvKC0aa717pYfHlh3om6LB0ZMme/C7q5UOQEggAAAAAEACqPfBqUH3fYAEAAQBOfd9g"
+    token: "0061e1b09b367354e35a77c2dba670d76adIAD770sO63sBI/6FGvb5n/qx0LKXsAp9DuwUFytSgOHsd0OQEggAAAAAEAAY899JDeXgYAEAAQAM5eBg"
   };
 let RTMoptions = {
     uid: uid,
@@ -38,8 +38,6 @@ let localTrackState = {
 
 // avriable to stire the local tracks id
 let localUID;
-
-
 
 // Basic functions for recieving and answering requests
 const basicCalls = async() =>{
@@ -77,6 +75,7 @@ const basicCalls = async() =>{
       client.on("user-unpublished", user => {
         const uid = user.uid;
         console.log(`player-${uid}`);
+        console.log("screeeeeeeeeeeeeen")
         const elem = document.getElementById(`player-${uid}`);
         if(elem && elem.childElementCount == 0) {
           document.getElementById("avatar").style.setProperty('position', 'inherit');
@@ -86,7 +85,10 @@ const basicCalls = async() =>{
       //event listener for a user leaving
       client.on("user-left", async(user) =>{
         const id = user.uid;
+        console.log("screeeeeeeeeeeeeen")
         $(`#player-wrapper-${id}`).remove();
+        const elem = document.getElementById("avatar");
+        if(elem) elem.style.setProperty('position', 'absolute')
       });
 
 
