@@ -1,7 +1,17 @@
 
 body{
-    background-color: black !important;
+    background-image: url("https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=751&q=80");
     height: 100vh;
+}
+
+.agora_video_player{
+    padding: 0 !important;
+    border-radius: 50px;
+}
+
+.player div{
+    border-radius: 50px;
+
 }
 
 #me video{
@@ -25,7 +35,7 @@ body{
 }
 
 .control:hover{
-    background-color: #c2c0c0;
+    background-color: #c2c0c025;
     border-radius: 5px;
 }
 
@@ -50,7 +60,7 @@ body{
 
 .chat_window{
     display: none;
-    background: rgb(153, 153, 153);
+    background: rgba(153, 153, 153, 0.192);
 }
 
 #chat_message{
@@ -60,29 +70,53 @@ body{
 }
 
 .placeHolder{
-    width: 489.6px; 
+    width: 400px; 
     height: 400px;
     display: flex;
     justify-content: center;
     align-items: center;
     border: blueviolet 2px solid;
+    background-color:rgba(178, 102, 212, 0.178);
 }
 
-.player_wrapper{
+.player_wrapper_peer{
     position: relative;
+    border-radius: 50px;
 }
-#avatar{
+.player_wrapper{
+    border-radius: 50px;
+}
+.avatar{
     position: absolute;
     top: 0;
     left: 0;
-    width: 489.6px; 
+    width: 400px; 
     height: 400px;
     display: flex;
     justify-content: center;
     align-items: center;
     border: blueviolet 2px solid;
+    border-radius: 50px;
+    background-color:rgba(178, 102, 212, 0.178);
 }
 
 .users{
     z-index: 9;
+}
+
+.main_controls{
+    background-color: transparent;
+    color: white;
+}
+
+.main_right{
+    width: 25%;
+}
+
+.main__message_container{
+    height: 8%;
+}
+
+.main__chat_window{
+    color: white;
 }

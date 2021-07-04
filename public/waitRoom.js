@@ -1,6 +1,6 @@
 const copy = () => {
     const elem = document.createElement('textarea');
-    elem.value = meetingID;
+    elem.value = meetingCode;
     document.body.appendChild(elem);
     elem.select();
     document.execCommand('copy');
@@ -12,16 +12,14 @@ const copy = () => {
   }
 
 const joinMeeting = () =>{
-    const code = meetingID;
-    location.href = `https://evening-brushlands-56347.herokuapp.com/${code}`;
+    location.href = meetingUrl;
   }
 
 
 const sendInvite = () =>{
     let email = $(".inviteEmail");
-    const code = meetingID;
     const body = `click on the link to join the meeting on NOVA
-        https://evening-brushlands-56347.herokuapp.com/${code}`;
+        ${meetingUrl}`;
         
     let link = `mailto:${email.val()}?subject=Join my meeting on NOVA&body=${body}`;
     

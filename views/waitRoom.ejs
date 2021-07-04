@@ -34,7 +34,7 @@
                 <h5>Share this code for others to join the room</h5>
                 <h6 class="mt-5">Meeting Code</h6>
                 <div class="input-group mb-3">
-                  <input type="text" class="form-control code" placeholder="<%= meetingID %>" readonly>
+                  <input type="text" class="form-control code" placeholder="<%= meetingCode %>" readonly>
                   <span class="input-group-text copybtn" data-bs-toggle="tooltip" data-bs-placement="top"  title="copy" style="cursor: pointer;">
                     <img onclick="copy()" class = "copyIcon" src="https://img.icons8.com/color/30/000000/copy--v2.png"/>
                   </span>
@@ -53,8 +53,10 @@
       </div>
     </div>
 <script>
-  const meetingID = '<%= meetingID %>'
+  const meetingCode = '<%= meetingCode %>'
+  const meetingUrl = '<%= meetingUrl %>'
+  const username = '<%= id %>';
 </script>
-<script src="waitRoom.js"></script>
+<script src="/waitRoom.js"></script>
 </body>
 </html>

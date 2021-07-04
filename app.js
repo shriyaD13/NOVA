@@ -53,18 +53,22 @@ app.get('/signIn', (req,res)=>{
 app.get('/signUp', (req,res)=>{
     res.render('signUp');
 })
-app.get('/home', (req,res) =>{
-    const name  = req.query.param1;
-    const username  = req.query.param2;
-    const email  = req.query.param3;
-    const avatar = req.query.param4;
-    // console.log(avatar);
+
+const getUser = async(email) =>{
+  const user =  db.collection('users').doc(email);
+  // console.log(user.id);
+  const userData = await user.get();
+  // console.log(userData.data())
+  return userData.data();
+}
+
+app.get('/home/:id', async(req,res) =>{
+    const id = req.params.id;
+    // console.log(id);
+    const {name, username, email, avatar} = await getUser(id);
     res.render('teamsHome' , {name,username, email,avatar});
 })
 
-app.get('/calls', (req,res)=>{
-  res.render('calls');
-})
 
 const addUser = async(data) =>{
   const {email} = data;
@@ -84,38 +88,35 @@ app.post('/signUp', async(req,res) =>{
     }
     await firebase.auth().createUserWithEmailAndPassword(email, password)
   .then((userCredential) => {
-    const avatar = `https://robohash.org/${username}`
-    const data = { name, username, email, avatar};
-    addUser(data);
-    res.redirect(`/home/?param1=${name}&param2=${username}&param3=${email}&param4=${avatar}`);
+    console.log("SignUP successful");
+    flag = 1;
   })
   .catch((error) => {
     var errorCode = error.code;
     var errorMessage = error.message;
     console.log(errorMessage);
     // ..
-    res.redirect('/');
   });
+  if(flag){
+    const avatar = `https://robohash.org/${username}`
+    const data = { name, username, email, avatar};
+    await addUser(data);
+    res.redirect(`/home/${email}`);
+  } else {
+    res.redirect('/');
+  }
     
 })
-
-const getUser = async(email) =>{
-  const user =  db.collection('users').doc(email);
-  const userData = await user.get();
-  return userData;
-}
 
 app.post('/signIn', async (req,res) =>{
     const { email, password } = req.body;
     let flag =0;
     await firebase.auth().signInWithEmailAndPassword(email, password)
   .then((userCredential) => {
-    // Signed in
     // const user = userCredential.user;
     // console.log(userCredential.user);
     console.log("Signin successful");
     flag = 1;
-    // ...
   })
   .catch((error) => {
     const errorCode = error.code;
@@ -125,9 +126,7 @@ app.post('/signIn', async (req,res) =>{
 
   if(flag)
   {
-    const userInfo = await getUser(email);
-    const {name, username, avatar} = userInfo.data();
-    res.redirect(`/home/?param1=${name}&param2=${username}&param3=${email}&param4=${avatar}`);
+    res.redirect(`/home/${email}`)
   } else {
     res.redirect('/');
   }
@@ -152,10 +151,34 @@ app.get('/joinCall', (req,res) =>{
 // https://evening-brushlands-56347.herokuapp.com/
 // waiting room
 // let meetingID;
-app.get('/callWait', (req,res)=>{
-  meetingID = uuidV4();
-  const meetingUrl = `https://evening-brushlands-56347.herokuapp.com/${meetingID}`;
-  res.render('waitRoom', {meetingUrl, meetingID});
+app.get('/callWait/:id', (req,res)=>{
+  const id = req.params.id;
+  const meetingID = uuidV4();
+  const meetingCode = meetingID +'!'+ id;
+  // console.log(meetingID);
+  const meetingUrl = `https://evening-brushlands-56347.herokuapp.com/call/${meetingID}!${id}`;
+  res.render('waitRoom', {id, meetingUrl, meetingCode});
+})
+
+app.get('/call/:id', async(req,res) =>{
+  const id = req.params.id;
+  const userEmail=id.split("!")[1];
+  // console.log("yyyyyyyyyyyyyy",userEmail);
+  let user;
+  if(userEmail) user =  db.collection('users').doc(userEmail);
+  else {
+    res.render("error");
+    return;
+  }
+  const userData = await user.get();
+  if(userData.exists)
+  {
+    const uid = uuidV4();
+    const RTMtoken = generateToken(uid);
+    res.render('room', {RTMtoken,uid});
+  } else {
+    res.render("error");
+  }
 })
 
 const generateToken = (uid) =>{
@@ -177,13 +200,13 @@ const generateToken = (uid) =>{
 }
 
 
-// video calling room
-app.get('/:id', (req,res) =>{
-  // res.send("yayay");
-  const uid = uuidV4();
-  const RTMtoken = generateToken(uid);
-  res.render('room', {RTMtoken,uid});
-})
+// // video calling room
+// app.get('/:id', (req,res) =>{
+//   // res.send("yayay");
+//   const uid = uuidV4();
+//   const RTMtoken = generateToken(uid);
+//   res.render('room', {RTMtoken,uid});
+// })
  
 
 server.listen(process.env.PORT || 3000);

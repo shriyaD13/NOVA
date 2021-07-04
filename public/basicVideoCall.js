@@ -12,7 +12,7 @@ client.enableAudioVolumeIndicator();
 let options = {
     appid: "1e1b09b367354e35a77c2dba670d76ad",
     channel: "myChannel",
-    token: "0061e1b09b367354e35a77c2dba670d76adIAD770sO63sBI/6FGvb5n/qx0LKXsAp9DuwUFytSgOHsd0OQEggAAAAAEAAY899JDeXgYAEAAQAM5eBg"
+    token: "0061e1b09b367354e35a77c2dba670d76adIAAL+ekPHqAq6Hr1Ezk0NgwYAuoyMhS0Jbdz4swl7dIamEOQEggAAAAAEAAm+nFWAEHiYAEAAQD+QOJg"
   };
 let RTMoptions = {
     uid: uid,
@@ -41,6 +41,7 @@ let localUID;
 
 // Basic functions for recieving and answering requests
 const basicCalls = async() =>{
+
   // User published event listener
     client.on("user-published", async (user, mediaType) => {
         // Initiate the subscription
@@ -54,10 +55,12 @@ const basicCalls = async() =>{
           audioTrack.play();
         } else {
           const videoTrack = user.videoTrack;
+          // receiveResolutionWidth()
+          console.log(videoTrack.getMediaStreamTrack().getConstraints());
           if(!document.getElementById(`player-wrapper-${uid}`)) {
                 const player = $(`
-                      <div id="player-wrapper-${uid}" class="player_wrapper">
-                      <div id="avatar">
+                      <div id="player-wrapper-${uid}" class="player_wrapper_peer me-2">
+                      <div id="avatar${uid}" class="avatar">
                         <img src =${avatar} alt = "robot"></img>
                       </div>
                       <div id="player-${uid}" class="player users"></div>
@@ -66,19 +69,20 @@ const basicCalls = async() =>{
           $("#remote-container").append(player);
 
           }
-          document.getElementById("avatar").style.setProperty('position', 'absolute');
+          document.getElementById(`avatar${uid}`).style.setProperty('position', 'absolute');
           videoTrack.play(`player-${uid}`);
+          // console.log(client.getRemoteVideoStats()) f21c9afc-dd47-434c-b5df-dfea506686b0  0ea8cd3a-7d2c-43ca-8ee2-f64275b0406d
         }
       });
 
       // listener for when user unpublishes
       client.on("user-unpublished", user => {
         const uid = user.uid;
-        console.log(`player-${uid}`);
-        console.log("screeeeeeeeeeeeeen")
+        // console.log(`player-${uid}`);/
+        // console.log("screeeeeeeeeeeeeen")
         const elem = document.getElementById(`player-${uid}`);
         if(elem && elem.childElementCount == 0) {
-          document.getElementById("avatar").style.setProperty('position', 'inherit');
+          document.getElementById(`avatar${uid}`).style.setProperty('position', 'inherit');
         }
       });
 
@@ -87,7 +91,7 @@ const basicCalls = async() =>{
         const id = user.uid;
         console.log("screeeeeeeeeeeeeen")
         $(`#player-wrapper-${id}`).remove();
-        const elem = document.getElementById("avatar");
+        const elem = document.getElementById(`avatar${uid}`);
         if(elem) elem.style.setProperty('position', 'absolute')
       });
 
@@ -107,7 +111,7 @@ const basicCalls = async() =>{
     client.on("volume-indicator", volumes => {
       volumes.forEach((volume, index) => {
         if(volume.level > 5) {
-          document.getElementById(`player-wrapper-${volume.uid}`).style.border = "green 3px solid";
+          document.getElementById(`player-wrapper-${volume.uid}`).style.border = "green 5px solid";
         } else {
           document.getElementById(`player-wrapper-${volume.uid}`).style.border = "0px";
         }
@@ -119,13 +123,18 @@ const basicCalls = async() =>{
 
   // Function to join a channel 
 const join = async () =>{
-    const cameraTrack = await AgoraRTC.createCameraVideoTrack();
+    const cameraTrack = await AgoraRTC.createCameraVideoTrack({
+      encoderConfig: {
+        width: 400,
+        height: 400
+    }});
+
     const microphoneTrack = await AgoraRTC.createMicrophoneAudioTrack();
     localTracks.audioTrack = microphoneTrack;
     localTracks.videoTrack = cameraTrack;
     await client.join(options.appid, options.channel, options.token).then((uid) => {
       const player = $(`
-      <div id="player-wrapper-${uid}">
+      <div id="player-wrapper-${uid}" class="player_wrapper me-2">
         <div id="player-${uid}" class="player"></div>
       </div>
     `);
