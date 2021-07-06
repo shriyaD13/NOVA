@@ -7,7 +7,7 @@ const displayMeetingInfo = () =>{
    document.getElementById("meetLabel").innerHTML = `<h6>Please enter a meeting name</h6>`
   } else{
     newCode = meetingCode + ":" + meetingName.val();
-    newUrl = meetingUrl + newCode;
+    newUrl = meetingUrl + ":" + meetingName.val();
     document.getElementById("codeDisplay").placeholder = newCode;
     document.querySelector(".MeetName").style.display="none";
     document.querySelector(".meetingInfo").style.display="block"
