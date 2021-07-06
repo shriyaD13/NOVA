@@ -24,6 +24,7 @@
                   <li class="dropdown-item"><b>Name: </b><%= name %> </li>
                   <li class="dropdown-item"><b>Username: </b><%= username %> </li>
                   <li class="dropdown-item"><b>Email: </b><%= email %> </li>
+                  <li class="dropdown-item text-center"><a href="/logout" style="text-decoration: none;">Log Out</a></li>
                 </ul>
               </div>
         </div>
@@ -34,7 +35,7 @@
           </div>
           <div class="d-flex">
             <div class="card shadow m-5" style="width: 15vw; height: 20vh;">
-                <a href="/joinCall/" class="card-img-top text-center mt-4 flex-grow-1">
+                <a href="/joinCall" class="card-img-top text-center mt-4 flex-grow-1">
                     <i class="fas fa-sign-in-alt" style="font-size: 300%;"></i>
                 </a>
                 <h6 class="card-body text-center">Join call</h6>
@@ -46,7 +47,7 @@
                 <h6 class="card-body text-center">Make a Call</h6>
               </div>
               <div class="card shadow m-5" style="width: 15vw; height: 20vh;">
-                <a href="/chat" class="card-img-top text-center mt-4 flex-grow-1">
+                <a href="/chat/<%= email %>" class="card-img-top text-center mt-4 flex-grow-1">
                     <i class="fas fa-comments" style="font-size: 300%;"></i>
                 </a>
                 <h6 class="card-body text-center">Chat</h6>
@@ -57,6 +58,14 @@
                 </a>
                 <h6 class="card-body text-center">Kanban Board</h6>
               </div>     
+          </div>
+          <div class="d-flex">
+            <div class="card shadow m-5" style="width: 15vw; height: 20vh;">
+              <a href="/calender" class="card-img-top text-center mt-4 flex-grow-1">
+                  <i class="fas fa-calendar-alt" style="font-size: 300%;"></i>
+              </a>
+              <h6 class="card-body text-center">Calender</h6>
+            </div>
           </div>
       </div>
 </body>

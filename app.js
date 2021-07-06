@@ -7,6 +7,7 @@ const { urlencoded } = require('express');
 const firebase = require("firebase/app");
 require("firebase/auth");
 const admin = require('firebase-admin');
+const session = require('express-session');
 const { v4: uuidV4 } = require('uuid')
 const {RtcTokenBuilder, RtmTokenBuilder, RtcRole, RtmRole} = require('agora-access-token')
 
@@ -37,7 +38,21 @@ app.set('views', path.join(__dirname, 'views'));
 // adding necessary malware
 app.use(express.static('public'));
 app.use(urlencoded({extended: true}));
+app.use(session(
+  {
+    secret: 'vulnerabilities',
+    resave: false,
+    saveUninitialized: true,
+  }
+));
+
+app.use((req,res,next) =>{
+  res.locals.currentUser = req.session.user;
+  next();
+})
 app.use(cors())
+
+
 // base routre
 app.get('/', (req, res) =>{
     res.render('home');
@@ -45,6 +60,14 @@ app.get('/', (req, res) =>{
 
 
 // user authentication
+const authorize = (req,res,next) =>{
+  // console.log(req.session.user);
+  if(!req.session.user){
+    return res.redirect('/');
+  } else {
+    next();
+  }
+}
 
 app.get('/signIn', (req,res)=>{
     res.render('signIn');
@@ -52,6 +75,11 @@ app.get('/signIn', (req,res)=>{
 
 app.get('/signUp', (req,res)=>{
     res.render('signUp');
+})
+
+app.get('/logout', (req,res) => {
+  req.session.destroy();
+  res.redirect('/')
 })
 
 const getUser = async(email) =>{
@@ -62,7 +90,7 @@ const getUser = async(email) =>{
   return userData.data();
 }
 
-app.get('/home/:id', async(req,res) =>{
+app.get('/home/:id', authorize, async(req,res) =>{
     const id = req.params.id;
     // console.log(id);
     const {name, username, email, avatar} = await getUser(id);
@@ -90,6 +118,7 @@ app.post('/signUp', async(req,res) =>{
   .then((userCredential) => {
     console.log("SignUP successful");
     flag = 1;
+    // req.session.userId = email;
   })
   .catch((error) => {
     var errorCode = error.code;
@@ -100,6 +129,7 @@ app.post('/signUp', async(req,res) =>{
   if(flag){
     const avatar = `https://robohash.org/${username}`
     const data = { name, username, email, avatar};
+    req.session.user = data;
     await addUser(data);
     res.redirect(`/home/${email}`);
   } else {
@@ -126,6 +156,8 @@ app.post('/signIn', async (req,res) =>{
 
   if(flag)
   {
+    const userData = await getUser(email);
+    req.session.user = userData;
     res.redirect(`/home/${email}`)
   } else {
     res.redirect('/');
@@ -134,52 +166,92 @@ app.post('/signIn', async (req,res) =>{
 
 
 // Chat
-let username1 = "123";
-app.get('/chat', (req,res) =>{
-  if(username1) {
-    const RTMtoken = generateToken(username1);
-  res.render('chat', {username1, RTMtoken});
+app.get('/chat/:id', authorize, async(req,res) =>{
+  const email  = req.params.id;
+  const user =  db.collection('users').doc(email);
+  const userData = await user.get();
+  if(userData.exists) {
+    const chats = db.collection('chats').doc(email);
+    const chatPeers = await chats.listCollections();
+    let peers = [];
+    chatPeers.forEach((peer) =>{
+      peers.push(peer.id)
+  })
+  let peerUsername = [];
+  let meetings = [];
+  for(let p of peers){
+  const peerdb =  db.collection('users').doc(p);
+  const peerData = await peerdb.get();
+  if(peerData.data() === undefined){
+    meetings.push(p);
+  } else {
+    peerUsername.push(peerData.data().username)
+  }
+  // console.log(peerData.data());
+  }
+  peerUsername.forEach((peer) => console.log("yeyey",peer));
+  const username = userData.data().username;
+  res.render('chat', {email,username,peerUsername, meetings});
   } else res.redirect('/');
 })
 
+app.get('/chatWindow/:id', authorize, async(req,res)=>{
+  const id = req.params.id;
+  const user1 =id.split("-")[0];
+  const user2 = id.split("-")[1];
+  const collection =  db.collection('users');
+  let host;
+  let peer;
+  await collection.where("username","==", `${user1}`)
+  .get()
+  .then((snapshot) =>{
+    snapshot.forEach((doc) => host = doc.data());
+  })
+  await collection.where("username","==", `${user2}`)
+  .get()
+  .then((snapshot) =>{
+    snapshot.forEach((doc) => peer = doc.data());
+  })
+  let chats = [];
+  const chatdb = await db.collection('chats').doc(host.email).collection(peer.email).get();
+  chatdb.forEach((chat) =>{
+    chats.push({
+      time: chat.id,
+      data: chat.data()
+    });
+  })    
+
+  // for(let p of chats){
+  //   console.log(p);
+  // }
+  const RTMtoken = generateToken(user1);
+  res.render("chatWindow" , {host, peer, chats,RTMtoken});
+})
+
+
+// calander
+app.get('/calender',authorize, (req,res) =>{
+    res.render("calender");
+})
+
+
 // Join Call
-app.get('/joinCall', (req,res) =>{
+app.get('/joinCall', authorize, (req,res) =>{
   res.render('joinCall');
 })
 
 
 // https://evening-brushlands-56347.herokuapp.com/
 // waiting room
-// let meetingID;
-app.get('/callWait/:id', (req,res)=>{
+app.get('/callWait/:id',authorize, (req,res)=>{
   const id = req.params.id;
   const meetingID = uuidV4();
-  const meetingCode = meetingID +'!'+ id;
+  const meetingCode = meetingID +':'+ id;
   // console.log(meetingID);
-  const meetingUrl = `https://evening-brushlands-56347.herokuapp.com/call/${meetingID}!${id}`;
+  const meetingUrl = `https://evening-brushlands-56347.herokuapp.com/call/${meetingID}:${id}`;
   res.render('waitRoom', {id, meetingUrl, meetingCode});
 })
 
-app.get('/call/:id', async(req,res) =>{
-  const id = req.params.id;
-  const userEmail=id.split("!")[1];
-  // console.log("yyyyyyyyyyyyyy",userEmail);
-  let user;
-  if(userEmail) user =  db.collection('users').doc(userEmail);
-  else {
-    res.render("error");
-    return;
-  }
-  const userData = await user.get();
-  if(userData.exists)
-  {
-    const uid = uuidV4();
-    const RTMtoken = generateToken(uid);
-    res.render('room', {RTMtoken,uid});
-  } else {
-    res.render("error");
-  }
-})
 
 const generateToken = (uid) =>{
   const options = {
@@ -199,6 +271,30 @@ const generateToken = (uid) =>{
   return RTMtoken;
 }
 
+
+
+app.get('/call/:id', authorize, async(req,res) =>{
+  const id = req.params.id;
+  const userEmail=id.split(":")[1];
+  const meetName = id.split(":")[2];
+  // console.log("yyyyyyyyyyyyyy",userEmail);
+  let user;
+  if(userEmail) user =  db.collection('users').doc(userEmail);
+  else {
+    res.render("error");
+    return;
+  }
+  const userData = await user.get();
+  if(userData.exists)
+  {
+    const host = userEmail;
+    const uid = req.session.user.username;
+    const RTMtoken = generateToken(uid);
+    res.render('room', {RTMtoken,uid, meetName,host});
+  } else {
+    res.render("error");
+  }
+})
 
 // // video calling room
 // app.get('/:id', (req,res) =>{

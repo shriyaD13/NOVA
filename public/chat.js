@@ -1,70 +1,44 @@
-var options = {
-    appid: "1e1b09b367354e35a77c2dba670d76ad",
-    channel: "myChannel",
-  };
+// firebase
 
-  let RTMoptions = {
-    uid: username,
-    token: RTMtoken
+// Initialize Cloud Firestore through Firebase
+firebase.initializeApp({
+  apiKey: 'AIzaSyCGuC1xU-H4HdF2Oh9jqmBNXrWMbO4V-QA',
+  authDomain: 'msteamsclone.firebaseapp.com',
+  projectId: 'msteamsclone'
+});
+
+var db = firebase.firestore();
+
+// Search the user to chat with
+let searchFor = $("input");
+const searchUser = async() =>{
+  let flag = 0;
+   const data = db.collection('users');
+   await data.get().then(async(users) =>{
+     users.forEach((user) => {
+      //  console.log(user.data())
+      if(user.data().username == username){
+        flag = 2;
+      }
+      else if(user.data().username === searchFor.val()) {
+        location.href = `https://evening-brushlands-56347.herokuapp.com/chatWindow/${username}-${user.data().username}`;
+        flag = 1;
+        // break;
+       }
+     });
+     if(flag === 0){
+      const alert =$(`<div class="alert alert-warning alert-dismissible fade show mt-2" role="alert">
+      <strong>Sorry!</strong> User does not exist.
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+       </div>`)
+
+       $("#chats").prepend(alert);
+     } 
+   })
 }
 
-// const client = AgoraRTC.createClient({
-//     mode: "rtc", 
-//     codec: "vp8" 
-//  });
- 
- const client = AgoraRTM.createInstance(options.appid);
-
- client.on('ConnectionStateChanged', (newState, reason) => {
-    console.log('reason', reason)
-    const view = $('<li/>', {
-      text: ['newState: ' + newState, ', reason: ', reason].join('')
-    })
-    $('.Peermsg').append(view)
-  })
-
- client.on('MessageFromPeer', function (message, peerId) {
-
-    document.querySelector(".Peermsg").appendChild(document.createElement('li')).append("Message from: " + peerId + " Message: " + message.text)
-})
-
-const basicCalls = async() =>{
-    await client.login(RTMoptions)
-}
-
-document.getElementById("sendMsg").onclick = async() => {
-
-    let peerId = document.getElementById("peerID").value.toString()
-    let peerMessage = document.getElementById("PeerMessage").value.toString()
-
-    client.queryPeersOnlineStatus([peerId]).then((res) => {
-        const view = $('<li/>', {
-          text: 'memberId: ' + peerId + ', online: ' + res[peerId]
-        })
-        $('.Peermsg').append(view)
-      }).catch((err) => {
-        // Toast.error('query peer online status failed, please open console see more details.')
-        console.error(err);
-      })
-
-    await client.sendMessageToPeer(
-        { text: peerMessage },
-        peerId,
-    ).then(sendResult => {
-        if (sendResult.hasPeerReceived) {
-
-            document.querySelector(".Peermsg").appendChild(document.createElement('li')).append("Message has been received by: " + peerId + " Message: " + peerMessage)
-
-        } else {
-
-            document.querySelector(".Peermsg").appendChild(document.createElement('li')).append("Message sent to: " + peerId + " Message: " + peerMessage)
-
-        }
-    })
-}
-
-const logOut = async() =>{
-    client.logout();
-    console.log("left");
-}
-basicCalls();
+$('html').keydown((e) => {
+  if (e.which == 13) {
+    searchUser();
+  }
+});

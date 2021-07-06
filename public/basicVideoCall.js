@@ -4,6 +4,16 @@ const client = AgoraRTC.createClient({
    codec: "vp8" 
 });
 
+// Initialize firebase
+firebase.initializeApp({
+  apiKey: 'AIzaSyCGuC1xU-H4HdF2Oh9jqmBNXrWMbO4V-QA',
+  authDomain: 'msteamsclone.firebaseapp.com',
+  projectId: 'msteamsclone'
+});
+let db = firebase.firestore();
+const currentUser = JSON.parse(currentUserData);
+console.log(currentUser);
+const chats = db.collection('chats').doc(currentUser.email);
 // Enable audio/volume indicator for detecting the active speaker
 client.enableAudioVolumeIndicator();
 
@@ -12,8 +22,9 @@ client.enableAudioVolumeIndicator();
 let options = {
     appid: "1e1b09b367354e35a77c2dba670d76ad",
     channel: "myChannel",
-    token: "0061e1b09b367354e35a77c2dba670d76adIAAL+ekPHqAq6Hr1Ezk0NgwYAuoyMhS0Jbdz4swl7dIamEOQEggAAAAAEAAm+nFWAEHiYAEAAQD+QOJg"
-  };
+    token: "0061e1b09b367354e35a77c2dba670d76adIADsKd6m1BMbPO2l8gRYtBLkvYIyIBClhWH7jQA3K0qxa0OQEggAAAAAEACqPfBq/tTkYAEAAQD81ORg"
+};
+
 let RTMoptions = {
     uid: uid,
     token: RTMtoken
@@ -23,7 +34,7 @@ const avatar = "https://avataaars.io/?accessoriesType=Prescription02&avatarStyle
 
 // chat config
 const chatClient = AgoraRTM.createInstance(options.appid);
-let channel = chatClient.createChannel("demoChannel")
+let channel = chatClient.createChannel(meetName + "by" + host)
 
 // Users' own track 
 let localTracks = {
@@ -100,9 +111,20 @@ const basicCalls = async() =>{
       // Listener for messages in channel 
       channel.on('ChannelMessage',  (message, memberId) => {
         console.log("recieved")
+        let today = new Date();
+        let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+        let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        let dateTime = date+ "@" + time;
+        const key = dateTime;
+        const chatName = meetName + "by" + host; 
+        const collection = chats.collection(chatName).doc(key);
+        collection.set({
+          sender:  memberId,
+          message: message.text
+        })
         // console.log(message);
         const html = 
-      `<h6>Friend</h6>
+      `<h6>${memberId}</h6>
       ${message.text}`;
       document.querySelector(".messages").appendChild(document.createElement('li')).innerHTML = html;
     })
@@ -296,8 +318,19 @@ $('html').keydown(async (e) => {
   if (e.which == 13) {
     await channel.sendMessage({ text: text.val() }).then(() => {
       console.log("message sent");
+      let today = new Date();
+        let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+        let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        let dateTime = date+ "@" + time;
+        const key = dateTime;
+        const chatName = meetName + "by" + host; 
+        const collection = chats.collection(chatName).doc(key);
+        collection.set({
+          sender:  uid,
+          message: text.val()
+        })
       const html = 
-      `<h6>Me</h6>
+      `<h6>${uid}</h6>
       ${text.val()}`;
       document.querySelector(".messages").appendChild(document.createElement('li')).innerHTML = html;
 

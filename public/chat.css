@@ -1,0 +1,10 @@
+.container{
+    height: 100%;
+    width: 60% !important;
+}
+
+
+
+.main_Chat_window{
+    overflow: scroll;
+}

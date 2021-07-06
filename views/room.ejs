@@ -27,7 +27,7 @@
           <span>Stop Video</span>
         </div>
         <div class="end-call control d-flex flex-column align-items-center p-2">
-          <a href="/"  onclick="endCall()"><i class="fas fa-phone-slash icon"></i></a>
+          <a href="/home/<%= currentUser.email %>"  onclick="endCall()"><i class="fas fa-phone-slash icon"></i></a>
           <span>End Call</span>
         </div>
         <div class="share-screen control d-flex flex-column align-items-center p-2" onclick="shareScreen()">
@@ -75,8 +75,13 @@
 <script>
   const RTMtoken = '<%- RTMtoken -%>';
   const uid = '<%- uid -%>';
+  const currentUserData = '<%- JSON.stringify(currentUser) %>'
+  const meetName = '<%- meetName -%>'
+  const host = '<%- host %>';
 </script>
 <script src="https://kit.fontawesome.com/2a68af24ec.js" crossorigin="anonymous"></script>
+<script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-firestore.js"></script>
 <script src="/AgoraRTC_N-4.5.0.js"></script>
 <script src="/agora-rtm-sdk-1.4.3.js"></script>
 <script src="/basicVideoCall.js"></script>

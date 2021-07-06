@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/galaxy.png">
+    <link rel="stylesheet" href="/chat.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <title>NOVA</title>
+</head>
+<body>
+    <div style=" padding-top: 3%; height: 100vh;">
+        <div class="container shadow-lg d-flex flex-column" id="chats">
+            <div class="header text-center border-bottom">
+                <h3 class="pt-2">Chats</h3>
+            </div>
+            <div class="main_container h-100 d-flex flex-column">
+                <div class="main_Chat_window flex-grow-1">
+                    <div class="messages">
+                        <ul class="msgList" style="list-style: none;">
+                            <% for(msg of chats) {%>
+                                <% if(msg.data.sender === host.username) {%>
+                                    <div class="msgContainer d-flex flex-column align-items-end">
+                                        <h6><%= msg.data.sender %> </h6>
+                                        <div><%= msg.data.message %> </div>
+                                    </div>
+                                    <% } else { %> 
+                                        <div class="msgContainer d-flex flex-column align-items-start">
+                                            <h6><%= msg.data.sender %> </h6>
+                                            <div><%= msg.data.message %> </div>
+                                        </div>
+                                    <% } %>   
+                                <% } %>  
+                        </ul>
+                    </div>
+                </div>
+                <div class="main_msg">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Enter message here" id="PeerMessage">
+                        <button class="btn btn-outline-secondary" type="button" onclick="send()">></button>
+                      </div>
+                </div>
+            </div>
+        </div>
+        <button class="logout" onclick="logOut()">Logout</button>
+    </div>
+    
+    <script>
+        const hostData = '<%- JSON.stringify(host) %>';
+        const peerData = '<%- JSON.stringify(peer) %>';
+        const RTMtoken = '<%- RTMtoken %>';
+    </script>
+    <script src="/agora-rtm-sdk-1.4.3.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-firestore.js"></script>
+    <script src= "/chatWindow.js"></script>
+</body>
+</html>
+
+    <!-- <h1>Chat</h1>
+    <label for="peerID">PEER ID</label>
+    <input type="text" name="peerID" id="peerID">
+    <label for="PeerMessage">Peer Message</label>
+    <input type="text" name="PeerMessage" id="PeerMessage">
+    <button id="sendMsg">Send Message</button>
+    
+    <div class="messages">
+        <ul class="Peermsg"></ul>
+    </div>
+    <button onclick="logOut()" class="btn"><a href="/home/">Back</a></button> -->
