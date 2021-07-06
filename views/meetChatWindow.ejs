@@ -15,14 +15,14 @@
     <div style=" padding-top: 3%; height: 100vh;">
         <div class="container shadow-lg d-flex flex-column" id="chats">
             <div class="header text-center border-bottom">
-                <h3 class="pt-2">Chats</h3>
+                <h3 class="pt-2"><%= meetId %></h3>
             </div>
             <div class="main_container h-100 d-flex flex-column">
                 <div class="main_Chat_window flex-grow-1">
                     <div class="messages">
                         <ul class="msgList" style="list-style: none;">
                             <% for(msg of chats) {%>
-                                <% if(msg.data.sender === host.username) {%>
+                                <% if(msg.data.sender === currentUser.username) {%>
                                     <div class="msgContainer d-flex flex-column align-items-end">
                                         <h6><%= msg.data.sender %> </h6>
                                         <div><%= msg.data.message %> </div>
@@ -48,14 +48,14 @@
     </div>
     
     <script>
-        const hostData = '<%- JSON.stringify(host) %>';
-        const peerData = '<%- JSON.stringify(peer) %>';
+        const currentUser = '<%- JSON.stringify(currentUser) %>';
         const RTMtoken = '<%- RTMtoken %>';
+        const meetId = '<%- meetId %>'
     </script>
     <script src="/agora-rtm-sdk-1.4.3.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-firestore.js"></script>
-    <script src= "/chatWindow.js"></script>
+    <script src= "/meetChat.js"></script>
 </body>
 </html>
 

@@ -189,7 +189,7 @@ app.get('/chat/:id', authorize, async(req,res) =>{
   }
   // console.log(peerData.data());
   }
-  peerUsername.forEach((peer) => console.log("yeyey",peer));
+  // peerUsername.forEach((peer) => console.log("yeyey",peer));
   const username = userData.data().username;
   res.render('chat', {email,username,peerUsername, meetings});
   } else res.redirect('/');
@@ -201,7 +201,7 @@ app.get('/chatWindow/:id', authorize, async(req,res)=>{
   const user2 = id.split("-")[1];
   const collection =  db.collection('users');
   let host;
-  let peer;
+  let peer; 
   await collection.where("username","==", `${user1}`)
   .get()
   .then((snapshot) =>{
@@ -226,6 +226,28 @@ app.get('/chatWindow/:id', authorize, async(req,res)=>{
   // }
   const RTMtoken = generateToken(user1);
   res.render("chatWindow" , {host, peer, chats,RTMtoken});
+})
+
+
+app.get('/meetingChat/:id', authorize, async(req,res) =>{
+  const id = decodeURI(req.params.id);
+  const user1 =id.split("-")[0];
+  const meetId = id.split("-")[1];
+  console.log(meetId);
+  // res.send("SDC"); 
+  const chatdb = await db.collection('chats').doc(req.session.user.email).collection(meetId).get();
+  let chats = [];
+  chatdb.forEach((chat) =>{
+    chats.push({
+      time: chat.id,
+      data: chat.data()
+    })
+  })
+
+  const RTMtoken = generateToken(req.session.user.username);
+  res.render('meetChatWindow', {chats, meetId, RTMtoken})
+  // const collection =  db.collection('users');
+
 })
 
 
@@ -287,7 +309,7 @@ app.get('/call/:id', authorize, async(req,res) =>{
   const userData = await user.get();
   if(userData.exists)
   {
-    const host = userEmail;
+    const host = userData.data().username;
     const uid = req.session.user.username;
     const RTMtoken = generateToken(uid);
     res.render('room', {RTMtoken,uid, meetName,host});

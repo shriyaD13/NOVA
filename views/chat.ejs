@@ -28,8 +28,13 @@
                 <div class="card mt-2 w-25">
                     <ul class="list-group list-group-flush" id="peerChats">
                         <% for(let peer of peerUsername) { %> 
-                            <a href="/chatWindow/<%=username %>-<%= peer%> ">
+                            <a href="/chatWindow/<%=username %>-<%= peer%>" style="text-decoration: none;">
                                 <li class="list-group-item"><%= peer %> </li>
+                            </a>
+                        <% } %> 
+                        <% for(let meet of meetings) { %> 
+                            <a href="/meetingChat/<%=username %>-<%= meet%>" style="text-decoration: none;">
+                                <li class="list-group-item"><%= meet %> </li>
                             </a>
                         <% } %> 
                     </ul>

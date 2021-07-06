@@ -34,7 +34,7 @@ const avatar = "https://avataaars.io/?accessoriesType=Prescription02&avatarStyle
 
 // chat config
 const chatClient = AgoraRTM.createInstance(options.appid);
-let channel = chatClient.createChannel(meetName + "by" + host)
+let channel = chatClient.createChannel(meetName + " by " + host)
 
 // Users' own track 
 let localTracks = {
@@ -116,7 +116,7 @@ const basicCalls = async() =>{
         let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
         let dateTime = date+ "@" + time;
         const key = dateTime;
-        const chatName = meetName + "by" + host; 
+        const chatName = meetName + " by " + host; 
         const collection = chats.collection(chatName).doc(key);
         collection.set({
           sender:  memberId,
@@ -323,7 +323,7 @@ $('html').keydown(async (e) => {
         let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
         let dateTime = date+ "@" + time;
         const key = dateTime;
-        const chatName = meetName + "by" + host; 
+        const chatName = meetName + " by " + host; 
         const collection = chats.collection(chatName).doc(key);
         collection.set({
           sender:  uid,
@@ -333,7 +333,6 @@ $('html').keydown(async (e) => {
       `<h6>${uid}</h6>
       ${text.val()}`;
       document.querySelector(".messages").appendChild(document.createElement('li')).innerHTML = html;
-
   })
     text.val('')
   }

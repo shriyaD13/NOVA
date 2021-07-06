@@ -111,8 +111,4 @@ $('html').keydown((e) => {
   }
 });
 
-const logOut = async() =>{
-    client.logout();
-    console.log("left");
-}
 basicCalls();
