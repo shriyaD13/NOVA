@@ -29,14 +29,17 @@ const copy = () => {
 
 const sendInvite = () =>{
   let email = $(".inviteEmail");
-  const body = `click on the link to join the meeting on NOVA
-      ${newUrl}`;
-      
-  let link = `mailto:${email.val()}?subject=Join my meeting on NOVA&body=${body}`;
+  if(email.val() !== ""){
+    const body = `click on the link to join the meeting on NOVA
+    ${newUrl}  or enter this code after signing in: ${newCode}`;
+    
+    let link = `mailto:${email.val()}?subject=Join my meeting on NOVA&body=${body}`;
+
+    window.location.href = link;
+    const invitebtn = document.getElementById("invitebtn")
+    invitebtn.innerText = "Invite Again";
+  }
   
-  window.location.href = link;
-  const invitebtn = document.getElementById("invitebtn")
-  invitebtn.innerText = "Invite Again";
 }
 
 const joinMeeting = () =>{

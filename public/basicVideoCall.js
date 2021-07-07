@@ -187,17 +187,22 @@ const basicCalls = async() =>{
         }
     })
 
-    //voleme indicator to detect the active speaker
-    // client.on("volume-indicator", volumes => {
-    //   volumes.forEach((volume, index) => {
-    //     if(volume.level > 5) {
-    //       document.getElementById(`player-wrapper-${volume.uid}`).style.border = "green 5px solid";
-    //     } else {
-    //       document.getElementById(`player-wrapper-${volume.uid}`).style.border = "0px";
-    //     }
-    //     // console.log(`${index} UID ${volume.uid} Level ${volume.level}`);
-    //   });
-    // })
+    // voleme indicator to detect the active speaker
+    client.on("volume-indicator", volumes => {
+      volumes.forEach((volume, index) => {
+        const elem = document.getElementById(`player-wrapper-${volume.uid}`);
+        if(volume.level > 5) {
+          if(elem) {
+           elem.style.border = "green 5px solid";
+          } 
+        } else {
+          if(elem) {
+           elem.style.border = "0px"; 
+          }
+        }
+        // console.log(`${index} UID ${volume.uid} Level ${volume.level}`);
+      });
+    })
   }
 
 
@@ -337,10 +342,19 @@ const shareScreen = async() => {
   } else {
     shareScreenState = false;
     await screenClient.leave();
-    document.getElementById("remote-container").style.flexDirection = "row";
-    document.querySelector(".player_wrapper").style.width = "46%";
-    document.querySelector(".player_wrapper_peer").style.width = "46%";
-    document.getElementById("remote-container").style.width = "100%"
+    const elem1 = document.getElementById("remote-container");
+    const elem2 = document.querySelector(".player_wrapper"); 
+    const elem3 = document.querySelector(".player_wrapper_peer");
+    if(elem1){
+      elem1.style.flexDirection = "row";
+      elem1.style.width = "100%";
+    }
+    if(elem2) elem2.style.width = "46%";
+    if(elem3)
+    {
+       elem3.style.width = "46%";  
+       console.log("doneeeeeeeeeeeeeeeee");
+    }   
     const html = 
     `<i class="fas fa-tv icon" id="shareScreenIcon"></i>
     <span id="shareScreenText">Share screen</span>`;
