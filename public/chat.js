@@ -12,15 +12,14 @@ var db = firebase.firestore();
 // Search the user to chat with
 let searchFor = $("input");
 const searchUser = async() =>{
+  if(searchFor.val() !== username)
+  {
   let flag = 0;
    const data = db.collection('users');
    await data.get().then(async(users) =>{
      users.forEach((user) => {
       //  console.log(user.data())
-      if(user.data().username == username){
-        flag = 2;
-      }
-      else if(user.data().username === searchFor.val()) {
+      if(user.data().username === searchFor.val()) {
         location.href = `https://evening-brushlands-56347.herokuapp.com/chatWindow/${username}-${user.data().username}`;
         flag = 1;
         // break;
@@ -31,10 +30,12 @@ const searchUser = async() =>{
       <strong>Sorry!</strong> User does not exist.
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
        </div>`)
-
+        
        $("#chats").prepend(alert);
+       console.log("doneee")
      } 
    })
+  }
 }
 
 $('html').keydown((e) => {
