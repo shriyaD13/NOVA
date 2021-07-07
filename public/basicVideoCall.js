@@ -22,8 +22,9 @@ client.enableAudioVolumeIndicator();
 // Agora config 
 let options = {
     appid: "1e1b09b367354e35a77c2dba670d76ad",
-    channel: "myChannel",
-    token: "0061e1b09b367354e35a77c2dba670d76adIAAkG90912neJrLIoOlJXo4qZyIMHrKe74OOzHZ0pOX4c0OQEggAAAAAEACqPfBqaifmYAEAAQBpJ+Zg"
+    channel: meetName + " by " + host,
+    token: RTCtoken,
+    uid: uid
 };
 
 let RTMoptions = {
@@ -222,7 +223,7 @@ const join = async () =>{
     const microphoneTrack = await AgoraRTC.createMicrophoneAudioTrack();
     localTracks.audioTrack = microphoneTrack;
     localTracks.videoTrack = cameraTrack;
-    await client.join(options.appid, options.channel, options.token).then((uid) => {
+    await client.join(options.appid, options.channel, options.token, options.uid).then((uid) => {
       const player = $(`
       <div id="player-wrapper-${uid}" class="player_wrapper me-2">
         <div id="player-${uid}" class="player"></div>
@@ -345,7 +346,7 @@ const screenClient = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
 const shareScreen = async() => {
   if(!shareScreenState){
     shareScreenState = true;
-    const uid = await screenClient.join(options.appid, options.channel, options.token);
+    const uid = await screenClient.join(options.appid, options.channel,screenToken,options.uid + "-screen");
     console.log("uuuuuuuuuuuuuuuuuuuuuu",uid);
     const screenTrack = await AgoraRTC.createScreenVideoTrack();
     await screenClient.publish(screenTrack).then(() =>{

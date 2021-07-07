@@ -279,12 +279,13 @@ app.get('/callWait/:id',authorize, (req,res)=>{
 })
 
 
-const generateToken = (uid) =>{
+const generateToken = (uid,channel) =>{
   const options = {
     appid: "1e1b09b367354e35a77c2dba670d76ad",
-    channel: "myChannel",
+    channel: channel,
     certificate: "ca4737d406234493a87967c1ed6eefac",
   };
+  const role = RtcRole.PUBLISHER;
   const expirationTimeInSeconds = 3600
 
   const currentTimestamp = Math.floor(Date.now() / 1000)
@@ -292,9 +293,9 @@ const generateToken = (uid) =>{
   const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds;
 
   const RTMtoken = RtmTokenBuilder.buildToken(options.appid, options.certificate, uid, RtmRole, privilegeExpiredTs);
-
-  // console.log("Rtm Token: " + RTMtoken);
-  return RTMtoken;
+  const RTCtoken = RtcTokenBuilder.buildTokenWithUid(options.appid, options.certificate, options.channel, uid, role, privilegeExpiredTs);
+  const screenToken = RtcTokenBuilder.buildTokenWithUid(options.appid, options.certificate, options.channel, uid + "-screen", role, privilegeExpiredTs);
+  return {RTMtoken, RTCtoken, screenToken};
 }
 
 
@@ -315,21 +316,14 @@ app.get('/call/:id', authorize, async(req,res) =>{
   {
     const host = userData.data().username;
     const uid = req.session.user.username;
-    const RTMtoken = generateToken(uid);
-    res.render('room', {RTMtoken,uid, meetName,host});
+    const channel = meetName + " by " + host;
+    const {RTMtoken, RTCtoken, screenToken} = generateToken(uid, channel);
+    // console.log(RTMtoken,RTCtoken,screenToken);
+    res.render('room', {RTMtoken,RTCtoken,screenToken,uid, meetName,host});
   } else {
     res.render("error");
   }
 })
-
-// // video calling room
-// app.get('/:id', (req,res) =>{
-//   // res.send("yayay");
-//   const uid = uuidV4();
-//   const RTMtoken = generateToken(uid);
-//   res.render('room', {RTMtoken,uid});
-// })
- 
 
 server.listen(process.env.PORT || 3000);
 
