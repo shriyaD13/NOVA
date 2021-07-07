@@ -22,7 +22,7 @@ client.enableAudioVolumeIndicator();
 let options = {
     appid: "1e1b09b367354e35a77c2dba670d76ad",
     channel: "myChannel",
-    token: "0061e1b09b367354e35a77c2dba670d76adIADsKd6m1BMbPO2l8gRYtBLkvYIyIBClhWH7jQA3K0qxa0OQEggAAAAAEACqPfBq/tTkYAEAAQD81ORg"
+    token: "0061e1b09b367354e35a77c2dba670d76adIAAkG90912neJrLIoOlJXo4qZyIMHrKe74OOzHZ0pOX4c0OQEggAAAAAEACqPfBqaifmYAEAAQBpJ+Zg"
 };
 
 let RTMoptions = {
@@ -50,6 +50,46 @@ let localTrackState = {
 // avriable to stire the local tracks id
 let localUID;
 
+function waitForElm(selector) {
+  return new Promise(resolve => {
+      if (document.querySelector(selector)) {
+          return resolve(document.querySelector(selector));
+      }
+
+      const observer = new MutationObserver(mutations => {
+          if (document.querySelector(selector)) {
+              resolve(document.querySelector(selector));
+              observer.disconnect();
+          }
+      });
+
+      observer.observe(document.body, {
+          childList: true,
+          subtree: true
+      });
+  });
+}
+
+
+
+const screenDisplay  = () =>{
+  const container = document.getElementById("remote-container");
+  const screen = container.lastChild;
+  console.log(screen);
+  container.style.flexDirection = "column";
+  document.querySelector(".player_wrapper").style.width = "100%";
+  document.querySelector(".player_wrapper_peer").style.width = "100%";
+  container.removeChild(container.lastChild);
+  console.log(container.className);
+  container.className = " d-flex ms-4 justify-content-center align-items-center";
+  container.style.width="20%";
+  screen.style.flexGrow = "1";
+  screen.style.width = "100%"
+  // screen.style.borderRadius = "0px";
+  $(".video-container").prepend(screen);
+}
+
+
 // Basic functions for recieving and answering requests
 const basicCalls = async() =>{
 
@@ -59,6 +99,7 @@ const basicCalls = async() =>{
         await client.subscribe(user, mediaType);
         console.log("subscribe success");
         const uid = user.uid;
+        console.log("screeeeeeeeeeeeeeeeeee", uid);
         // If the subscribed track is an audio track
         if (mediaType === "audio") {
           const audioTrack = user.audioTrack;
@@ -67,7 +108,6 @@ const basicCalls = async() =>{
         } else {
           const videoTrack = user.videoTrack;
           // receiveResolutionWidth()
-          console.log(videoTrack.getMediaStreamTrack().getConstraints());
           if(!document.getElementById(`player-wrapper-${uid}`)) {
                 const player = $(`
                       <div id="player-wrapper-${uid}" class="player_wrapper_peer me-2">
@@ -79,9 +119,10 @@ const basicCalls = async() =>{
                     `);
           $("#remote-container").append(player);
 
-          }
-          document.getElementById(`avatar${uid}`).style.setProperty('position', 'absolute');
+          }document.getElementById(`avatar${uid}`).style.setProperty('position', 'absolute');
           videoTrack.play(`player-${uid}`);
+          // console.log(videoTrack.getMediaStreamTrack().getSettings().displaySurface);
+
           // console.log(client.getRemoteVideoStats()) f21c9afc-dd47-434c-b5df-dfea506686b0  0ea8cd3a-7d2c-43ca-8ee2-f64275b0406d
         }
       });
@@ -100,46 +141,63 @@ const basicCalls = async() =>{
       //event listener for a user leaving
       client.on("user-left", async(user) =>{
         const id = user.uid;
-        console.log("screeeeeeeeeeeeeen")
+        // console.log("screeeeeeeeeeeeeen")
         $(`#player-wrapper-${id}`).remove();
         const elem = document.getElementById(`avatar${uid}`);
         if(elem) elem.style.setProperty('position', 'absolute')
       });
 
+      
+
 
 
       // Listener for messages in channel 
       channel.on('ChannelMessage',  (message, memberId) => {
-        console.log("recieved")
-        let today = new Date();
-        let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-        let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-        let dateTime = date+ "@" + time;
-        const key = dateTime;
-        const chatName = meetName + " by " + host; 
-        const collection = chats.collection(chatName).doc(key);
-        collection.set({
-          sender:  memberId,
-          message: message.text
-        })
-        // console.log(message);
-        const html = 
-      `<h6>${memberId}</h6>
-      ${message.text}`;
-      document.querySelector(".messages").appendChild(document.createElement('li')).innerHTML = html;
+        const uid= message.text.split("@")[0];
+        const id = `player-wrapper-${uid}`;
+        console.log(id);
+        const msg = message.text.split("@")[1];
+        if(msg === "screenSharingEnabled"){
+          waitForElm(`#${id}`).then(() =>{
+            screenDisplay();
+          });
+        } else if(message.text === "unshareScreen"){
+          document.getElementById("remote-container").style.flexDirection = "row";
+          document.querySelector(".player_wrapper").style.width = "46%";
+          document.querySelector(".player_wrapper_peer").style.width = "46%";
+          document.getElementById("remote-container").style.width = "100%"
+          // document.getElementById("remote-container").style.width
+        } else {
+          let today = new Date();
+          let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+          let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+          let dateTime = date+ "@" + time;
+          const key = dateTime;
+          const chatName = meetName + " by " + host; 
+          const collection = chats.collection(chatName).doc(key);
+          collection.set({
+            sender:  memberId,
+            message: message.text
+          })
+          // console.log(message);
+          const html = 
+        `<h6>${memberId}</h6>
+        ${message.text}`;
+        document.querySelector(".messages").appendChild(document.createElement('li')).innerHTML = html;
+        }
     })
 
     //voleme indicator to detect the active speaker
-    client.on("volume-indicator", volumes => {
-      volumes.forEach((volume, index) => {
-        if(volume.level > 5) {
-          document.getElementById(`player-wrapper-${volume.uid}`).style.border = "green 5px solid";
-        } else {
-          document.getElementById(`player-wrapper-${volume.uid}`).style.border = "0px";
-        }
-        // console.log(`${index} UID ${volume.uid} Level ${volume.level}`);
-      });
-    })
+    // client.on("volume-indicator", volumes => {
+    //   volumes.forEach((volume, index) => {
+    //     if(volume.level > 5) {
+    //       document.getElementById(`player-wrapper-${volume.uid}`).style.border = "green 5px solid";
+    //     } else {
+    //       document.getElementById(`player-wrapper-${volume.uid}`).style.border = "0px";
+    //     }
+    //     // console.log(`${index} UID ${volume.uid} Level ${volume.level}`);
+    //   });
+    // })
   }
 
 
@@ -183,7 +241,7 @@ const endCall = async() =>{
 const changeDisplay = () =>{
   const element = document.getElementById(`player-${localUID}`);
   const html = 
-  `<div class="placeHolder">
+  `<div id="placeHolder">
   <img src =${avatar} alt = "robot"></img>
   </div>`
   element.innerHTML = html;
@@ -264,18 +322,30 @@ const shareScreen = async() => {
   if(!shareScreenState){
     shareScreenState = true;
     const uid = await screenClient.join(options.appid, options.channel, options.token);
+    console.log("uuuuuuuuuuuuuuuuuuuuuu",uid);
     const screenTrack = await AgoraRTC.createScreenVideoTrack();
     await screenClient.publish(screenTrack).then(() =>{
-      document.getElementById("shareScreenIcon").style.color = "red";
-      document.getElementById("shareScreenText").innerHTML = `Unshare Screen`;
+        const id = `player-wrapper-${uid}`
+        waitForElm(`#${id}`).then(() =>{
+          screenDisplay();
+        });
+        channel.sendMessage({ text: `${uid}@screenSharingEnabled` }).then(() =>{
+        document.getElementById("shareScreenIcon").style.color = "red";
+        document.getElementById("shareScreenText").innerHTML = `Unshare Screen`;
+      })
     });
   } else {
     shareScreenState = false;
     await screenClient.leave();
+    document.getElementById("remote-container").style.flexDirection = "row";
+    document.querySelector(".player_wrapper").style.width = "46%";
+    document.querySelector(".player_wrapper_peer").style.width = "46%";
+    document.getElementById("remote-container").style.width = "100%"
     const html = 
     `<i class="fas fa-tv icon" id="shareScreenIcon"></i>
     <span id="shareScreenText">Share screen</span>`;
     document.querySelector(".share-screen").innerHTML = html;
+    await channel.sendMessage({ text: `unshareScreen` })
   }
 } 
 
