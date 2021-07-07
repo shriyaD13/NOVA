@@ -166,6 +166,7 @@ const basicCalls = async() =>{
           document.querySelector(".player_wrapper").style.width = "46%";
           document.querySelector(".player_wrapper_peer").style.width = "46%";
           document.getElementById("remote-container").style.width = "100%"
+          console.log("yyyyyyyyyyyyyyyyyyyyyyyyyy")
           // document.getElementById("remote-container").style.width
         } else {
           let today = new Date();
@@ -352,8 +353,9 @@ const shareScreen = async() => {
     if(elem2) elem2.style.width = "46%";
     if(elem3)
     {
+        console.log(elem3.style.width);
        elem3.style.width = "46%";  
-       console.log("doneeeeeeeeeeeeeeeee");
+       console.log(elem3.style.width);
     }   
     const html = 
     `<i class="fas fa-tv icon" id="shareScreenIcon"></i>
