@@ -140,4 +140,5 @@ body{
 
 .main__chat_window{
     color: white;
+    overflow: auto;
 }

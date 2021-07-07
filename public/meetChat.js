@@ -8,7 +8,7 @@ var db = firebase.firestore();
 const currUser = JSON.parse(currentUser);
 // console.log(currUser.username);
 
-const chats = db.collection('chats').doc(currUser.email);
+const chats = db.collection(meetId);
 
 let RTMoptions = {
     uid: currUser.username,
@@ -18,7 +18,11 @@ let RTMoptions = {
 const client = AgoraRTM.createInstance("1e1b09b367354e35a77c2dba670d76ad");
 let channel = client.createChannel(meetId);
 
-
+const scrollToBottom = () => {
+  var d = $('.main_container');
+  d.scrollTop(d.prop("scrollHeight"));
+  console.log("DFVS");
+}
 
 channel.on('ChannelMessage',  (message, memberId) => {
     console.log("recieved")
@@ -27,8 +31,7 @@ channel.on('ChannelMessage',  (message, memberId) => {
     let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
     let dateTime = date+ "@" + time;
     const key = dateTime;
-    const collection = chats.collection(meetId).doc(key);
-    collection.set({
+    chats.doc(key).set({
       sender:  memberId,
       message: message.text
     })
@@ -38,6 +41,7 @@ channel.on('ChannelMessage',  (message, memberId) => {
     <div>${message.text}</div>
     </div>`)
     $(".msgList").append(msgbox);
+    scrollToBottom();
 })
 
 const basicCalls = async() =>{
@@ -58,8 +62,7 @@ const send = async() => {
         var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
         var dateTime = date+ "@" + time;
         const key = dateTime;
-        const collection = chats.collection(meetId).doc(key);
-        collection.set({
+        chats.doc(key).set({
         sender:  currUser.username,
         message: peerMessage
         })
@@ -68,6 +71,7 @@ const send = async() => {
                             <div>${peerMessage}</div>
                             </div>`)
           $(".msgList").append(msgbox);
+          scrollToBottom();
     })
 }
 $('html').keydown((e) => {
@@ -76,5 +80,8 @@ $('html').keydown((e) => {
   }
 });
 
+window.onload = () =>{
+  scrollToBottom();
+}
 basicCalls();
   

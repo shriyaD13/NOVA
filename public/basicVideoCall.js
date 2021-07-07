@@ -13,7 +13,8 @@ firebase.initializeApp({
 let db = firebase.firestore();
 const currentUser = JSON.parse(currentUserData);
 console.log(currentUser);
-const chats = db.collection('chats').doc(currentUser.email);
+const chats = db.collection(meetName + " by " + host);
+
 // Enable audio/volume indicator for detecting the active speaker
 client.enableAudioVolumeIndicator();
 
@@ -166,8 +167,6 @@ const basicCalls = async() =>{
           document.querySelector(".player_wrapper").style.width = "46%";
           document.querySelector(".player_wrapper_peer").style.width = "46%";
           document.getElementById("remote-container").style.width = "100%"
-          console.log("yyyyyyyyyyyyyyyyyyyyyyyyyy")
-          // document.getElementById("remote-container").style.width
         } else {
           let today = new Date();
           let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
@@ -175,8 +174,7 @@ const basicCalls = async() =>{
           let dateTime = date+ "@" + time;
           const key = dateTime;
           const chatName = meetName + " by " + host; 
-          const collection = chats.collection(chatName).doc(key);
-          collection.set({
+          db.collection(chatName).doc(key).set({
             sender:  memberId,
             message: message.text
           })
@@ -185,6 +183,7 @@ const basicCalls = async() =>{
         `<h6>${memberId}</h6>
         ${message.text}`;
         document.querySelector(".messages").appendChild(document.createElement('li')).innerHTML = html;
+        scrollToBottom();
         }
     })
 
@@ -206,6 +205,11 @@ const basicCalls = async() =>{
     })
   }
 
+
+const scrollToBottom = () => {
+  var d = $('.main__chat_window');
+  d.scrollTop(d.prop("scrollHeight"));
+}
 
   // Function to join a channel 
 const join = async () =>{
@@ -233,6 +237,20 @@ const join = async () =>{
     // login and join RTM 
     await chatClient.login(RTMoptions);
     await channel.join();
+
+    // Add the meeting to users data base
+    let today = new Date();
+    let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+    let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    let dateTime = date+ "@" + time;
+    // const meetName = 
+    db.collection('chats')
+    .doc(currentUser.email)
+    .collection('meetings')
+    .doc(meetName + " by " + host)
+    .set({
+      time: dateTime  
+    })
 }
 
 // End call function
@@ -410,8 +428,7 @@ $('html').keydown(async (e) => {
         let dateTime = date+ "@" + time;
         const key = dateTime;
         const chatName = meetName + " by " + host; 
-        const collection = chats.collection(chatName).doc(key);
-        collection.set({
+        db.collection(chatName).doc(key).set({
           sender:  uid,
           message: text.val()
         })
@@ -419,6 +436,7 @@ $('html').keydown(async (e) => {
       `<h6>${uid}</h6>
       ${text.val()}`;
       document.querySelector(".messages").appendChild(document.createElement('li')).innerHTML = html;
+      scrollToBottom();
   })
     text.val('')
   }

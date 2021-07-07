@@ -180,13 +180,17 @@ app.get('/chat/:id', authorize, async(req,res) =>{
   let peerUsername = [];
   let meetings = [];
   for(let p of peers){
-  const peerdb =  db.collection('users').doc(p);
-  const peerData = await peerdb.get();
-  if(peerData.data() === undefined){
-    meetings.push(p);
-  } else {
-    peerUsername.push(peerData.data().username)
-  }
+    console.log(p);
+    if(p === "meetings"){
+      const meeetIDs = await db.collection('chats').doc(email).collection('meetings').get();
+      meeetIDs.forEach((meet) =>{
+        meetings.push(meet.id);
+      })
+    } else {
+      const peerdb =  db.collection('users').doc(p);
+      const peerData = await peerdb.get();
+      peerUsername.push(peerData.data().username)
+    }
   // console.log(peerData.data());
   }
   // peerUsername.forEach((peer) => console.log("yeyey",peer));
@@ -235,7 +239,7 @@ app.get('/meetingChat/:id', authorize, async(req,res) =>{
   const meetId = id.split("-")[1];
   console.log(meetId);
   // res.send("SDC"); 
-  const chatdb = await db.collection('chats').doc(req.session.user.email).collection(meetId).get();
+  const chatdb = await db.collection(meetId).get();
   let chats = [];
   chatdb.forEach((chat) =>{
     chats.push({

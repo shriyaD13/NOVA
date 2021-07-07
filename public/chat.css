@@ -5,6 +5,10 @@
 
 
 
-.main_Chat_window{
-    overflow: scroll;
+.main_container{
+    overflow: auto;
+}
+
+#chats{
+    height: 100vh;
 }
