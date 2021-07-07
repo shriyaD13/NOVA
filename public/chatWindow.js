@@ -28,6 +28,13 @@ console.log(hostObj.username)
 }
  const client = AgoraRTM.createInstance(options.appid);
 
+ 
+const scrollToBottom = () => {
+  var d = $('.main_container');
+  d.scrollTop(d.prop("scrollHeight"));
+  console.log("DFVS");
+}
+
  client.on('ConnectionStateChanged', (newState, reason) => {
     console.log('reason', reason)
     const view = $('<li/>', {
@@ -43,6 +50,7 @@ console.log(hostObj.username)
                             <div>${message.text}</div>
                             </div>`)
     $(".msgList").append(msgbox);
+    scrollToBottom();
 })
 
 const basicCalls = async() =>{
@@ -94,6 +102,7 @@ const send = async() => {
                             <div>${peerMessage}</div>
                             </div>`)
           $(".msgList").append(msgbox);
+          scrollToBottom();
         // if (sendResult.hasPeerReceived) {
 
         //     document.querySelector(".msgList").appendChild(document.createElement('li')).append("Message has been received by: " + peerId + " Message: " + peerMessage)
@@ -110,5 +119,9 @@ $('html').keydown((e) => {
     send();
   }
 });
+
+window.onload = () =>{
+  scrollToBottom();
+}
 
 basicCalls();

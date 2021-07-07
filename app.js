@@ -199,6 +199,21 @@ app.get('/chat/:id', authorize, async(req,res) =>{
   } else res.redirect('/');
 })
 
+const genrateRtmToken = (uid) =>{
+  const options = {
+    appid: "1e1b09b367354e35a77c2dba670d76ad",
+    certificate: "ca4737d406234493a87967c1ed6eefac",
+  };
+  const expirationTimeInSeconds = 3600
+
+  const currentTimestamp = Math.floor(Date.now() / 1000)
+
+  const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds;
+
+  const RTMtoken = RtmTokenBuilder.buildToken(options.appid, options.certificate, uid, RtmRole, privilegeExpiredTs);
+  return RTMtoken;
+}
+
 app.get('/chatWindow/:id', authorize, async(req,res)=>{
   const id = req.params.id;
   const user1 =id.split("-")[0];
@@ -228,7 +243,7 @@ app.get('/chatWindow/:id', authorize, async(req,res)=>{
   // for(let p of chats){
   //   console.log(p);
   // }
-  const RTMtoken = generateToken(user1);
+  const RTMtoken = genrateRtmToken(user1);
   res.render("chatWindow" , {host, peer, chats,RTMtoken});
 })
 
@@ -248,7 +263,7 @@ app.get('/meetingChat/:id', authorize, async(req,res) =>{
     })
   })
 
-  const RTMtoken = generateToken(req.session.user.username);
+  const RTMtoken = genrateRtmToken(req.session.user.username);
   res.render('meetChatWindow', {chats, meetId, RTMtoken})
   // const collection =  db.collection('users');
 
