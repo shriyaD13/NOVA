@@ -12,6 +12,8 @@ const session = require('express-session');
 const { v4: uuidV4 } = require('uuid')
 const {RtcTokenBuilder, RtmTokenBuilder, RtcRole, RtmRole} = require('agora-access-token')
 
+
+// Firebase Configs
   var firebaseConfig = {
     apiKey: "AIzaSyD4JjNM3eyakgrkXVg_t8nUny2jpgnWeiE",
     authDomain: "nova-c68e3.firebaseapp.com",
@@ -22,11 +24,12 @@ const {RtcTokenBuilder, RtmTokenBuilder, RtcRole, RtmRole} = require('agora-acce
     measurementId: "G-RK7H0LFV7J"
   };
 firebase.initializeApp(firebaseConfig);
-
 const serviceAccount = require('./nova-c68e3-firebase-adminsdk-weglw-e07465e0e0.json');
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
+
+// Initial the firebase database
 const db = admin.firestore();
 
 
@@ -34,9 +37,11 @@ const db = admin.firestore();
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// adding necessary malware
+// adding necessary middleware
 app.use(express.static('public'));
 app.use(urlencoded({extended: true}));
+
+// adding session to keep track of logged in user and also protect the routes
 app.use(session(
   {
     secret: 'vulnerabilities',
@@ -54,7 +59,7 @@ app.use(cors())
 
 // base routre
 app.get('/', (req, res) =>{
-    res.render('home');
+    res.render('landingPage');
 })
 
 
@@ -69,11 +74,11 @@ const authorize = (req,res,next) =>{
 }
 
 app.get('/signIn', (req,res)=>{
-    res.render('signIn');
+    res.render('authentication/signIn');
 })
 
 app.get('/signUp', (req,res)=>{
-    res.render('signUp');
+    res.render('authentication/signUp');
 })
 
 app.get('/logout', (req,res) => {
@@ -81,6 +86,8 @@ app.get('/logout', (req,res) => {
   res.redirect('/')
 })
 
+
+// Helper functions for accesing the user database
 const getUser = async(email) =>{
   const user =  db.collection('users').doc(email);
   // console.log(user.id);
@@ -88,14 +95,6 @@ const getUser = async(email) =>{
   // console.log(userData.data())
   return userData.data();
 }
-
-app.get('/home/:id', authorize, async(req,res) =>{
-    const id = req.params.id;
-    // console.log(id);
-    const {name, username, email, avatar} = await getUser(id);
-    res.render('teamsHome' , {name,username, email,avatar});
-})
-
 
 const addUser = async(data) =>{
   const {email} = data;
@@ -105,6 +104,17 @@ const addUser = async(data) =>{
     console.log(e);
   })
 }
+
+
+// Home page of the website
+app.get('/home/:id', authorize, async(req,res) =>{
+    const id = req.params.id;
+    // console.log(id);
+    const {name, username, email, avatar} = await getUser(id);
+    res.render('home' , {name,username, email,avatar});
+})
+
+
 
 app.post('/signUp', async(req,res) =>{
     const { name, username, email, password , confirmPassword} = req.body;
@@ -194,7 +204,7 @@ app.get('/chat/:id', authorize, async(req,res) =>{
   }
   // peerUsername.forEach((peer) => console.log("yeyey",peer));
   const username = userData.data().username;
-  res.render('chat', {email,username,peerUsername, meetings});
+  res.render('chats/chat', {email,username,peerUsername, meetings});
   } else res.redirect('/');
 })
 
@@ -243,7 +253,7 @@ app.get('/chatWindow/:id', authorize, async(req,res)=>{
   //   console.log(p);
   // }
   const RTMtoken = genrateRtmToken(user1);
-  res.render("chatWindow" , {host, peer, chats, RTMtoken});
+  res.render("chats/chatWindow" , {host, peer, chats, RTMtoken});
 })
 
 
@@ -263,7 +273,7 @@ app.get('/meetingChat/:id', authorize, async(req,res) =>{
   })
 
   const RTMtoken = genrateRtmToken(req.session.user.username);
-  res.render('meetChatWindow', {chats, meetId, RTMtoken})
+  res.render('chats/meetChatWindow', {chats, meetId, RTMtoken})
   // const collection =  db.collection('users');
 
 })
@@ -274,7 +284,7 @@ app.get('/calender',authorize, (req,res) =>{
     res.render("calender");
 })
 
-
+// config options for whiteboard 
 var options = {
   "method": "POST",
   "url": "https://api.netless.link/v5/rooms",
@@ -290,7 +300,7 @@ app.get('/whiteBoard', authorize, (req,res) =>{
   request(options, function (error, response) {
     if (error) throw new Error(error);
     uid = JSON.parse(response.body).uuid;
-  res.render('createWhiteBoard', {uid});
+  res.render('whiteboard/createWhiteBoard', {uid});
     // console.log(response.body, uid);
   });
 })
@@ -312,7 +322,7 @@ app.get('/whiteBoard/:id', authorize, (req,res) =>{
     if (error) throw new Error(error);
     token = JSON.parse(response.body);
     // console.log(response.body);
-    res.render('whiteBoard', {uid,token});
+    res.render('whiteboard/whiteBoard', {uid,token});
   });
 })
 
@@ -320,11 +330,10 @@ app.get('/whiteBoard/:id', authorize, (req,res) =>{
 
 // Join Call
 app.get('/joinCall', authorize, (req,res) =>{
-  res.render('joinCall');
+  res.render('calls/joinCall');
 })
 
 
-// https://evening-brushlands-56347.herokuapp.com/
 // waiting room
 app.get('/callWait/:id',authorize, (req,res)=>{
   const id = req.params.id;
@@ -332,9 +341,11 @@ app.get('/callWait/:id',authorize, (req,res)=>{
   const meetingCode = meetingID +':'+ id;
   // console.log(meetingID);
   const meetingUrl = `https://evening-brushlands-56347.herokuapp.com/call/${meetingID}:${id}`;
-  res.render('waitRoom', {id, meetingUrl, meetingCode});
+  res.render('calls/waitRoom', {id, meetingUrl, meetingCode});
 })
 
+
+// function to generate a token for audio/video call and chat
 const generateToken = (uid,channel) =>{
   const options = {
     appid: "1e1b09b367354e35a77c2dba670d76ad",
@@ -354,8 +365,7 @@ const generateToken = (uid,channel) =>{
   return {RTMtoken, RTCtoken, screenToken};
 }
 
-
-
+// video call route
 app.get('/call/:id', authorize, async(req,res) =>{
   const id = req.params.id;
   const userEmail=id.split(":")[1];
@@ -375,7 +385,7 @@ app.get('/call/:id', authorize, async(req,res) =>{
     const channel = meetName + " by " + host;
     const {RTMtoken, RTCtoken, screenToken} = generateToken(uid, channel);
     // console.log(RTMtoken,RTCtoken,screenToken);
-    res.render('room', {RTMtoken,RTCtoken,screenToken,uid, meetName,host});
+    res.render('calls/room', {RTMtoken,RTCtoken,screenToken,uid, meetName,host});
   } else {
     res.render("error");
   }

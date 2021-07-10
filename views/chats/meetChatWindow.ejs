@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="/galaxy.png">
-    <link rel="stylesheet" href="/chat.css">
+    <link rel="stylesheet" href="/styles/chat.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
@@ -13,23 +13,22 @@
 </head>
 <body>
     <div class="chat_window">
-        <div class="top_menu d-flex">
-            <div class="avatar">
-                <img src="<%= peer.avatar %>" alt="avatar" id="profileImg">
-            </div>
-            <div class="title"><%= peer.name %> </div>
+        <div class="top_menu d-flex justify-content-center align-items-center">
+                <h3 class="pt-2"><%= meetId %></h3>
         </div>
         <ul class="messages msgList">
             <% for(msg of chats) {%>
-                <% if(msg.data.sender === host.username) {%>
+                <% if(msg.data.sender === currentUser.username) {%>
                     <div class="msgContainer d-flex my-1 flex-column align-items-end">
                         <div class="rightMsg">
+                            <div id="sender"><%= msg.data.sender %></div>
                             <p><%= msg.data.message %> </p>
                         </div>
                     </div>
                     <% } else { %> 
-                        <div class="msgContainer d-flex  my-1 flex-column align-items-start">
+                        <div class="msgContainer d-flex my-1 flex-column align-items-start">
                             <div class="leftMsg">
+                                <div id="sender"><%= msg.data.sender %></div>
                                 <p><%= msg.data.message %> </p>
                             </div>
                         </div>
@@ -46,15 +45,26 @@
             </div>
         </div>
     </div>
-    
     <script>
-        const hostData = '<%- JSON.stringify(host) %>';
-        const peerData = '<%- JSON.stringify(peer) %>';
+        const currentUser = '<%- JSON.stringify(currentUser) %>';
         const RTMtoken = '<%- RTMtoken %>';
+        const meetId = '<%- meetId %>'
     </script>
-    <script src="/agora-rtm-sdk-1.4.3.js"></script>
+    <script src="/agora_sdk/agora-rtm-sdk-1.4.3.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-firestore.js"></script>
-    <script src= "/chatWindow.js"></script>
+    <script src= "/chats/meetChat.js"></script>
 </body>
 </html>
+
+    <!-- <h1>Chat</h1>
+    <label for="peerID">PEER ID</label>
+    <input type="text" name="peerID" id="peerID">
+    <label for="PeerMessage">Peer Message</label>
+    <input type="text" name="PeerMessage" id="PeerMessage">
+    <button id="sendMsg">Send Message</button>
+    
+    <div class="messages">
+        <ul class="Peermsg"></ul>
+    </div>
+    <button onclick="logOut()" class="btn"><a href="/home/">Back</a></button> -->
