@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors')
+const request = require("request");
 const app = express();
 const server = require('http').Server(app);
 const path = require('path');
@@ -244,7 +245,7 @@ app.get('/chatWindow/:id', authorize, async(req,res)=>{
   //   console.log(p);
   // }
   const RTMtoken = genrateRtmToken(user1);
-  res.render("chatWindow" , {host, peer, chats,RTMtoken});
+  res.render("chatWindow" , {host, peer, chats, RTMtoken});
 })
 
 
@@ -276,6 +277,49 @@ app.get('/calender',authorize, (req,res) =>{
 })
 
 
+var options = {
+  "method": "POST",
+  "url": "https://api.netless.link/v5/rooms",
+  "headers": {
+  "token": "NETLESSSDK_YWs9aDdOVjJjcVo3OFZaZ19CTyZub25jZT1lZjVjOTBiMC1lMDE4LTExZWItYWM5Ny0wMzc2ZWUzNmVhZTQmcm9sZT0wJnNpZz01NGJmYjgxOGFjZDI1Y2UzNDRkMTU3YTk4YmVlYTdiYzQ2YWFhOTczMzU1ZDQ4ZmYzOTkyYWEwMDZlNWIwYmQx",
+  "Content-Type": "application/json",
+  "region": "us-sv"
+  }
+};
+
+app.get('/whiteBoard', authorize, (req,res) =>{
+  let uid;
+  request(options, function (error, response) {
+    if (error) throw new Error(error);
+    uid = JSON.parse(response.body).uuid;
+  res.render('createWhiteBoard', {uid});
+    // console.log(response.body, uid);
+  });
+})
+
+app.get('/whiteBoard/:id', authorize, (req,res) =>{
+  const uid = req.params.id;
+  var options = {
+    "method": "POST",
+    "url": `https://api.netless.link/v5/tokens/rooms/${uid}`, 
+    "headers": {
+    "token": "NETLESSSDK_YWs9aDdOVjJjcVo3OFZaZ19CTyZub25jZT1lZjVjOTBiMC1lMDE4LTExZWItYWM5Ny0wMzc2ZWUzNmVhZTQmcm9sZT0wJnNpZz01NGJmYjgxOGFjZDI1Y2UzNDRkMTU3YTk4YmVlYTdiYzQ2YWFhOTczMzU1ZDQ4ZmYzOTkyYWEwMDZlNWIwYmQx",
+    "Content-Type": "application/json",
+    "region": "us-sv"
+    },
+    body: JSON.stringify({"lifespan":3600000,"role":"admin"})
+  
+  };
+  request(options, function (error, response) {
+    if (error) throw new Error(error);
+    token = JSON.parse(response.body);
+    // console.log(response.body);
+    res.render('whiteBoard', {uid,token});
+  });
+})
+
+
+
 // Join Call
 app.get('/joinCall', authorize, (req,res) =>{
   res.render('joinCall');
@@ -292,7 +336,6 @@ app.get('/callWait/:id',authorize, (req,res)=>{
   const meetingUrl = `https://evening-brushlands-56347.herokuapp.com/call/${meetingID}:${id}`;
   res.render('waitRoom', {id, meetingUrl, meetingCode});
 })
-
 
 const generateToken = (uid,channel) =>{
   const options = {

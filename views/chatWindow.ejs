@@ -12,37 +12,37 @@
     <title>NOVA</title>
 </head>
 <body>
-    <div style=" padding-top: 3%; height: 100vh;">
-        <div class="container shadow-lg d-flex flex-column" id="chats">
-            <div class="header text-center border-bottom">
-                <h3 class="pt-2">Chats</h3>
+    <div class="chat_window">
+        <div class="top_menu d-flex">
+            <div class="avatar">
+                <img src="<%= peer.avatar %>" alt="avatar" id="profileImg">
             </div>
-            <div class="main_container h-100 d-flex flex-column">
-                <div class="main_Chat_window flex-grow-1">
-                    <div class="messages">
-                        <ul class="msgList" style="list-style: none;">
-                            <% for(msg of chats) {%>
-                                <% if(msg.data.sender === host.username) {%>
-                                    <div class="msgContainer d-flex flex-column align-items-end">
-                                        <h6><%= msg.data.sender %> </h6>
-                                        <div><%= msg.data.message %> </div>
-                                    </div>
-                                    <% } else { %> 
-                                        <div class="msgContainer d-flex flex-column align-items-start">
-                                            <h6><%= msg.data.sender %> </h6>
-                                            <div><%= msg.data.message %> </div>
-                                        </div>
-                                    <% } %>   
-                                <% } %>  
-                        </ul>
+            <div class="title"><%= peer.name %> </div>
+        </div>
+        <ul class="messages msgList">
+            <% for(msg of chats) {%>
+                <% if(msg.data.sender === host.username) {%>
+                    <div class="msgContainer d-flex my-1 flex-column align-items-end">
+                        <div class="rightMsg">
+                            <p><%= msg.data.message %> </p>
+                        </div>
                     </div>
-                </div>
+                    <% } else { %> 
+                        <div class="msgContainer d-flex  my-1 flex-column align-items-start">
+                            <div class="leftMsg">
+                                <p><%= msg.data.message %> </p>
+                            </div>
+                        </div>
+                    <% } %>   
+                <% } %>
+        </ul>
+        <div class="bottom_wrapper clearfix">
+            <div class="message_input_wrapper">
+                <input class="message_input" placeholder="Type your message here..." id="PeerMessage" />
             </div>
-            <div class="main_msg">
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Enter message here" id="PeerMessage">
-                    <button class="btn btn-outline-secondary" type="button" onclick="send()">></button>
-                  </div>
+            <div class="send_message" onclick="send()">
+                <div class="icon"></div>
+                <div class="text">Send</div>
             </div>
         </div>
     </div>
@@ -58,15 +58,3 @@
     <script src= "/chatWindow.js"></script>
 </body>
 </html>
-
-    <!-- <h1>Chat</h1>
-    <label for="peerID">PEER ID</label>
-    <input type="text" name="peerID" id="peerID">
-    <label for="PeerMessage">Peer Message</label>
-    <input type="text" name="PeerMessage" id="PeerMessage">
-    <button id="sendMsg">Send Message</button>
-    
-    <div class="messages">
-        <ul class="Peermsg"></ul>
-    </div>
-    <button onclick="logOut()" class="btn"><a href="/home/">Back</a></button> -->

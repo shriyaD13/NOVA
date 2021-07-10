@@ -25,7 +25,7 @@
                       </div>
                 </div>
                 <h4>Open a previous one</h4>
-                <div class="card mt-2 w-25">
+                <div class="card mt-2 w-25 chatList">
                     <ul class="list-group list-group-flush" id="peerChats">
                         <% for(let peer of peerUsername) { %> 
                             <a href="/chatWindow/<%=username %>-<%= peer%>" style="text-decoration: none;">
@@ -42,7 +42,6 @@
             </div>
         </div>
     </div>
-    
     <script>
         const username = '<%- username %>';
         const email = '<%= email %>';

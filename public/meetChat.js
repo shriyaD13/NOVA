@@ -19,9 +19,9 @@ const client = AgoraRTM.createInstance("1e1b09b367354e35a77c2dba670d76ad");
 let channel = client.createChannel(meetId);
 
 const scrollToBottom = () => {
-  var d = $('.main_container');
+  var d = $('.msgList');
   d.scrollTop(d.prop("scrollHeight"));
-  console.log("DFVS");
+  // console.log("DFVS");
 }
 
 channel.on('ChannelMessage',  (message, memberId) => {
@@ -36,10 +36,12 @@ channel.on('ChannelMessage',  (message, memberId) => {
       message: message.text
     })
     // console.log(message);
-    const msgbox = $(`<div class="msgContainer d-flex flex-column align-items-start">
-    <h6>${memberId}</h6>
-    <div>${message.text}</div>
-    </div>`)
+    const msgbox = $(`<div class="msgContainer d-flex my-1 flex-column align-items-start">
+                          <div class="leftMsg">
+                            <div id="sender">${memberId}</div>
+                            <p>${message.text}</p>
+                          </div>
+                        </div>`)
     $(".msgList").append(msgbox);
     scrollToBottom();
 })
@@ -67,8 +69,10 @@ const send = async() => {
         message: peerMessage
         })
           const msgbox = $(`<div class="msgContainer d-flex flex-column align-items-end">
-                            <h6>${currUser.username}</h6>
-                            <div>${peerMessage}</div>
+                              <div class="rightMsg">
+                                <div id="sender">${currUser.username}</div>
+                                  <p>${peerMessage}</p>
+                              </div>
                             </div>`)
           $(".msgList").append(msgbox);
           scrollToBottom();

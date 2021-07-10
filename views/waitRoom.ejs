@@ -39,7 +39,7 @@
               </div>
               <div class="meetingInfo" style="display: none;">
               <h4 class="card-title text-center">Meeting room created</h4>
-                <div class="mt-5">
+                <div class="mt-5 title">
                   <h5>Share this code for others to join the room</h5>
                   <h6 class="mt-5">Meeting Code</h6>
                   <div class="input-group mb-3">
@@ -58,7 +58,7 @@
                     </div>
                 </div>
                 <button class="btn btn-success btn-block" style="width: 100%;" onclick="joinMeeting()">Join Now</button>
-              </div>
+              </div> 
               
           </div>
       </div>
@@ -66,8 +66,11 @@
 <script>
   const meetingCode = '<%= meetingCode %>'
   const meetingUrl = '<%= meetingUrl %>'
+  const currentUser = '<%- JSON.stringify(currentUser) %>';
   const username = '<%= id %>';
 </script>
+<script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-firestore.js"></script>
 <script src="/waitRoom.js"></script>
 </body>
 </html>

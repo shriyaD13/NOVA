@@ -30,24 +30,25 @@ console.log(hostObj.username)
 
  
 const scrollToBottom = () => {
-  var d = $('.main_container');
+  var d = $('.msgList');
   d.scrollTop(d.prop("scrollHeight"));
   console.log("DFVS");
 }
 
- client.on('ConnectionStateChanged', (newState, reason) => {
-    console.log('reason', reason)
-    const view = $('<li/>', {
-      text: ['newState: ' + newState, ', reason: ', reason].join('')
-    })
-    $('.Peermsg').append(view)
-  })
+//  client.on('ConnectionStateChanged', (newState, reason) => {
+//     console.log('reason', reason)
+//     const view = $('<li/>', {
+//       text: ['newState: ' + newState, ', reason: ', reason].join('')
+//     })
+//     $('.Peermsg').append(view)
+//   })
 
  client.on('MessageFromPeer', function (message, peerId) {
 
-    const msgbox = $(`<div class="msgContainer d-flex flex-column align-items-start">
-                            <h6>${peerObj.username}</h6>
-                            <div>${message.text}</div>
+    const msgbox = $(`<div class="msgContainer d-flex my-1 flex-column align-items-start">
+                              <div class="leftMsg">
+                                <p>${message.text}</p>
+                              </div>
                             </div>`)
     $(".msgList").append(msgbox);
     scrollToBottom();
@@ -97,9 +98,10 @@ const send = async() => {
           reciever:peerObj.username,
           message: peerMessage
           })
-          const msgbox = $(`<div class="msgContainer d-flex flex-column align-items-end">
-                            <h6>${hostObj.username}</h6>
-                            <div>${peerMessage}</div>
+          const msgbox = $(`<div class="msgContainer my-1 d-flex flex-column align-items-end">
+                              <div class="rightMsg">
+                                <p>${peerMessage}</p>
+                              </div>
                             </div>`)
           $(".msgList").append(msgbox);
           scrollToBottom();
