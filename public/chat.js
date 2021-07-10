@@ -2,9 +2,9 @@
 
 // Initialize Cloud Firestore through Firebase
 firebase.initializeApp({
-  apiKey: 'AIzaSyCGuC1xU-H4HdF2Oh9jqmBNXrWMbO4V-QA',
-  authDomain: 'msteamsclone.firebaseapp.com',
-  projectId: 'msteamsclone'
+  apiKey: 'AIzaSyD4JjNM3eyakgrkXVg_t8nUny2jpgnWeiE',
+  authDomain: 'nova-c68e3.firebaseapp.com',
+  projectId: 'nova-c68e3'
 });
 
 var db = firebase.firestore();

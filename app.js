@@ -12,20 +12,18 @@ const session = require('express-session');
 const { v4: uuidV4 } = require('uuid')
 const {RtcTokenBuilder, RtmTokenBuilder, RtcRole, RtmRole} = require('agora-access-token')
 
-// firebase configurations
-const firebaseConfig = {
-    apiKey: "AIzaSyCGuC1xU-H4HdF2Oh9jqmBNXrWMbO4V-QA",
-    authDomain: "msteamsclone.firebaseapp.com",
-    projectId: "msteamsclone",
-    storageBucket: "msteamsclone.appspot.com",
-    messagingSenderId: "893337993539",
-    appId: "1:893337993539:web:57de5eec1c60c79a122ff6",
-    measurementId: "G-G02TM61K6G",
-    databaseURL: "https://msteamsclone.firebaseio.com",
+  var firebaseConfig = {
+    apiKey: "AIzaSyD4JjNM3eyakgrkXVg_t8nUny2jpgnWeiE",
+    authDomain: "nova-c68e3.firebaseapp.com",
+    projectId: "nova-c68e3",
+    storageBucket: "nova-c68e3.appspot.com",
+    messagingSenderId: "1073173657353",
+    appId: "1:1073173657353:web:004e95c4c827c9c128c5d8",
+    measurementId: "G-RK7H0LFV7J"
   };
 firebase.initializeApp(firebaseConfig);
 
-const serviceAccount = require('./msteamsclone-firebase-adminsdk-8sjze-956fff9efb.json');
+const serviceAccount = require('./nova-c68e3-firebase-adminsdk-weglw-e07465e0e0.json');
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
