@@ -79,8 +79,18 @@ const screenDisplay  = () =>{
   const screen = container.lastChild;
   console.log(screen);
   container.style.flexDirection = "column";
-  document.querySelector(".player_wrapper").style.width = "100%";
-  document.querySelector(".player_wrapper_peer").style.width = "100%";
+  // console.log(document.querySelectorAll(".player_wrapper_peer"));
+  // console.log(document.querySelectorAll(".player_wrapper"));
+  const elem1 = document.querySelectorAll(".player_wrapper");
+  elem1.forEach((elem) =>{
+    elem.style.width = "100%"
+  })
+  const elem2 = document.querySelectorAll(".player_wrapper_peer");
+  elem2.forEach((elem) =>{
+    elem.style.width = "100%"
+  })
+  // document.querySelector(".player_wrapper").style.width = "100%";
+  // document.querySelector(".player_wrapper_peer").style.width = "100%";
   container.removeChild(container.lastChild);
   console.log(container.className);
   container.className = " d-flex ms-4 justify-content-center align-items-center";
@@ -101,7 +111,6 @@ const basicCalls = async() =>{
         await client.subscribe(user, mediaType);
         console.log("subscribe success");
         const uid = user.uid;
-        console.log("screeeeeeeeeeeeeeeeeee", uid);
         // If the subscribed track is an audio track
         if (mediaType === "audio") {
           const audioTrack = user.audioTrack;
@@ -109,7 +118,6 @@ const basicCalls = async() =>{
           audioTrack.play();
         } else {
           const videoTrack = user.videoTrack;
-          // receiveResolutionWidth()
           if(!document.getElementById(`player-wrapper-${uid}`)) {
                 const player = $(`
                       <div id="player-wrapper-${uid}" class="player_wrapper_peer me-2">
@@ -123,9 +131,6 @@ const basicCalls = async() =>{
 
           }document.getElementById(`avatar${uid}`).style.setProperty('position', 'absolute');
           videoTrack.play(`player-${uid}`);
-          // console.log(videoTrack.getMediaStreamTrack().getSettings().displaySurface);
-
-          // console.log(client.getRemoteVideoStats()) f21c9afc-dd47-434c-b5df-dfea506686b0  0ea8cd3a-7d2c-43ca-8ee2-f64275b0406d
         }
       });
 
@@ -149,10 +154,6 @@ const basicCalls = async() =>{
         if(elem) elem.style.setProperty('position', 'absolute')
       });
 
-      
-
-
-
       // Listener for messages in channel 
       channel.on('ChannelMessage',  (message, memberId) => {
         const uid= message.text.split("@")[0];
@@ -165,8 +166,14 @@ const basicCalls = async() =>{
           });
         } else if(message.text === "unshareScreen"){
           document.getElementById("remote-container").style.flexDirection = "row";
-          document.querySelector(".player_wrapper").style.width = "46%";
-          document.querySelector(".player_wrapper_peer").style.width = "46%";
+          const elem1 = document.querySelectorAll(".player_wrapper");
+          elem1.forEach((elem) =>{
+            elem.style.width = "46%"
+          })
+          const elem2 = document.querySelectorAll(".player_wrapper_peer");
+          elem2.forEach((elem) =>{
+            elem.style.width = "46%"
+          })
           document.getElementById("remote-container").style.width = "100%"
         } else {
           let today = new Date();
@@ -362,19 +369,24 @@ const shareScreen = async() => {
   } else {
     shareScreenState = false;
     await screenClient.leave();
+
     const elem1 = document.getElementById("remote-container");
-    const elem2 = document.querySelector(".player_wrapper"); 
-    const elem3 = document.querySelector(".player_wrapper_peer");
+    const elem2 = document.querySelectorAll(".player_wrapper"); 
+    const elem3 = document.querySelectorAll(".player_wrapper_peer");
     if(elem1){
       elem1.style.flexDirection = "row";
       elem1.style.width = "100%";
     }
-    if(elem2) elem2.style.width = "46%";
+    if(elem2){
+      elem2.forEach((elem) =>{
+        elem.style.width = "46%";
+      })
+    } 
     if(elem3)
     {
-        console.log(elem3.style.width);
-       elem3.style.width = "46%";  
-       console.log(elem3.style.width);
+      elem3.forEach((elem) =>{
+        elem.style.width = "46%";
+      })
     }   
     const html = 
     `<i class="fas fa-tv icon" id="shareScreenIcon"></i>
