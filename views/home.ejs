@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/styles/homeStyle.css">
-    <link rel="icon" href="/galaxy.png">
+    <link rel="icon" href="/images/galaxy.png">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
@@ -13,66 +13,77 @@
     <title>NOVA</title>
 </head>
 <body style="height: 100vh;">
-    <nav class="navbar navbar-dark bg-dark">
-        <div class="container-fluid d-flex justify-content-between" >
-            <h6 class="header">NOVA</h6>
-            <div class="dropdown">
-                <div class="profile dropdown-toggle"  data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
-                  <img src="<%= avatar %>" alt="avatar" id="profileImg">
-                </div>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                  <li class="dropdown-item"><b>Name: </b><%= name %> </li>
-                  <li class="dropdown-item"><b>Username: </b><%= username %> </li>
-                  <li class="dropdown-item"><b>Email: </b><%= email %> </li>
-                  <li class="dropdown-item text-center"><a href="/logout" style="text-decoration: none;">Log Out</a></li>
-                </ul>
+  <div id="particles-js">
+  <div class="main">
+    <nav class="navbar navbar-dark">
+      <div class="container-fluid d-flex justify-content-between" >
+          <h6 class="header">NOVA</h6>
+          <div class="dropdown">
+              <div class="profile dropdown-toggle"  data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                <img src="<%= avatar %>" alt="avatar" id="profileImg">
               </div>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li class="dropdown-item"><b>Name: </b><%= name %> </li>
+                <li class="dropdown-item"><b>Username: </b><%= username %> </li>
+                <li class="dropdown-item"><b>Email: </b><%= email %> </li>
+                <li class="dropdown-item text-center"><a href="/logout" style="text-decoration: none;">Log Out</a></li>
+              </ul>
+            </div>
+      </div>
+    </nav>
+    <div class="h-100 w-100 d-flex align-items-center flex-column mt-5">
+        <div class="greeting">
+            <h3>Welcome  <%- name %>! </h3>
         </div>
-      </nav>
-      <div class="h-100 w-100 d-flex align-items-center flex-column mt-5">
-          <div class="">
-              <h3>Welcome  <%- name %>! </h3>
-          </div>
-          <div class="d-flex">
-            <div class="card shadow m-5" style="width: 15vw; height: 20vh;">
-                <a href="/joinCall" class="card-img-top text-center mt-4 flex-grow-1">
-                    <i class="fas fa-sign-in-alt" style="font-size: 300%;"></i>
-                </a>
-                <h6 class="card-body text-center">Join call</h6>
-              </div>
-            <div class="card shadow m-5" style="width: 15vw; height: 20vh;">
-                <a href="/callWait/<%= email %>" class="card-img-top text-center mt-4 flex-grow-1">
-                    <i class="fas fa-phone-alt" style="font-size: 300%;"></i>
-                </a>
-                <h6 class="card-body text-center">Make a Call</h6>
-              </div>
-              <div class="card shadow m-5" style="width: 15vw; height: 20vh;">
-                <a href="/chat/<%= email %>" class="card-img-top text-center mt-4 flex-grow-1">
-                    <i class="fas fa-comments" style="font-size: 300%;"></i>
-                </a>
-                <h6 class="card-body text-center">Chat</h6>
-              </div> 
-          </div>
-          <div class="d-flex">
-            <div class="card shadow m-5" style="width: 15vw; height: 20vh;">
-              <a href="/calender" class="card-img-top text-center mt-4 flex-grow-1">
-                  <i class="fas fa-calendar-alt" style="font-size: 300%;"></i>
+        <div class="d-flex">
+          <div class="card shadow m-5" style="width: 15vw; height: 20vh;">
+              <a href="/joinCall" class="card-img-top text-center mt-4 flex-grow-1">
+                  <i class="fas fa-sign-in-alt" style="font-size: 300%;"></i>
               </a>
-              <h6 class="card-body text-center">Calender</h6>
+              <h6 class="card-body text-center">Join call</h6>
+            </div>
+          <div class="card shadow m-5" style="width: 15vw; height: 20vh;">
+              <a href="/callWait/<%= email %>" class="card-img-top text-center mt-4 flex-grow-1" style="color: #fe3f40;">
+                  <i class="fas fa-phone-alt" style="font-size: 300%;"></i>
+              </a>
+              <h6 class="card-body text-center">Make a Call</h6>
             </div>
             <div class="card shadow m-5" style="width: 15vw; height: 20vh;">
-              <a href="https://shriyad13.github.io/Kanban/" target="_blank" class="card-img-top text-center mt-4 flex-grow-1">
-                  <i class="fas fa-tasks" style="font-size: 300%;"></i>
+              <a href="/chat/<%= email %>" class="card-img-top text-center mt-4 flex-grow-1">
+                  <i class="fas fa-comments" style="font-size: 300%;"></i>
               </a>
-              <h6 class="card-body text-center">Kanban Board</h6>
+              <h6 class="card-body text-center">Chat</h6>
             </div> 
-            <div class="card shadow m-5" style="width: 15vw; height: 20vh;">
-              <a href="/whiteBoard" class="card-img-top text-center mt-4 flex-grow-1">
-                  <i class="fas fa-chalkboard" style="font-size: 300%;"></i>
-              </a>
-              <h6 class="card-body text-center">Whiteboard</h6>
-            </div>  
+        </div>
+        <div class="d-flex">
+          <div class="card shadow m-5" style="width: 15vw; height: 20vh;">
+            <a href="/calender" class="card-img-top text-center mt-4 flex-grow-1" style="color: #fe3f40;">
+                <i class="fas fa-calendar-alt" style="font-size: 300%;"></i>
+            </a>
+            <h6 class="card-body text-center">Calender</h6>
           </div>
-      </div>
+          <div class="card shadow m-5" style="width: 15vw; height: 20vh;">
+            <a href="https://shriyad13.github.io/Kanban/" target="_blank" class="card-img-top text-center mt-4 flex-grow-1">
+                <i class="fas fa-tasks" style="font-size: 300%;"></i>
+            </a>
+            <h6 class="card-body text-center">Kanban Board</h6>
+          </div> 
+          <div class="card shadow m-5" style="width: 15vw; height: 20vh;">
+            <a href="/whiteBoard" class="card-img-top text-center mt-4 flex-grow-1" style="color: #fe3f40;">
+                <i class="fas fa-chalkboard" style="font-size: 300%;"></i>
+            </a>
+            <h6 class="card-body text-center">Whiteboard</h6>
+          </div>  
+        </div>
+    </div>
+  </div>
+</div>
+    
+      <script src=
+        "/particles.js-master/particles.js">
+    </script>
+    <script src=
+        "/particles.js-master/demo/js/app.js">
+    </script>
 </body>
 </html>

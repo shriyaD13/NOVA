@@ -4,14 +4,29 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="/galaxy.png">
+    <link rel="icon" href="/images/galaxy.png">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <title>NOVA</title>
+
+    <style>
+        body{
+            background-image: url('/images/cool-background-3.png');
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        
+        input{
+            background-color: unset !important;
+        }
+        li, .card{
+            background-color: unset !important;
+        }
+    </style>
 </head>
 <body>
-    <div style="height: 100vh; padding-top: 3%;">
+    <div style="height: 100%; padding-top: 3%;">
         <div class="container shadow-lg d-flex flex-column" id="chats" style="height: fit-content; width: 80%;">
             <div class="header text-center">
                 <h3 class="pt-2">Chats</h3>
@@ -21,7 +36,7 @@
                 <div class="search mt-2 mb-5">
                     <div class="input-group mb-3" style="width: fit-content;">
                         <input type="text" class="form-control" placeholder="username" aria-label="username" aria-describedby="button-addon2">
-                        <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="searchUser()">Chat</button>
+                        <button class="btn btn-outline-primary" type="button" id="button-addon2" onclick="searchUser()">Chat</button>
                       </div>
                 </div>
                 <h4>Open a previous one</h4>

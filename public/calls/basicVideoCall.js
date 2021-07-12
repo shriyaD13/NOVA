@@ -18,7 +18,7 @@ firebase.initializeApp({
 });
 let db = firebase.firestore();
 const currentUser = JSON.parse(currentUserData);
-console.log(currentUser);
+// console.log(currentUser);
 const chats = db.collection(meetName + " by " + host);
 
 // Enable audio/volume indicator for detecting the active speaker
@@ -250,7 +250,7 @@ const basicCalls = async() =>{
         const elem = document.getElementById(`player-wrapper-${volume.uid}`);
         if(volume.level > 5) {
           if(elem) {
-           elem.style.border = "green 5px solid";
+           elem.style.border = "#0af320 5px solid";
           } 
         } else {
           if(elem) {

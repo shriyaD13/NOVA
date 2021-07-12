@@ -224,3 +224,10 @@
     margin-left: 14%;
     font-weight: bold;
 }
+
+body{
+    background-image: url('/images/cool-background4.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+}

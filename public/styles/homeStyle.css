@@ -1,16 +1,38 @@
+body{
+    background-image: url('/images/cool-background-3.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    /* overflow: hidden; */
+    /* background: linear-gradient(89deg, hsla(17, 100%, 60%, 0.74) 0%, #04C8DE 100%); */
+}
 #profileImg{
     height:40px !important;
 }
+.greeting h3{
+    font-weight: bolder; 
+    color: #ffffff;
+}
+#particles-js{
+    height: 100vh;
+}
+
+.main{
+    position: absolute;
+    width: 100%;
+}
 
 .header{
-    color: ivory !important;
+    color: rgb(255, 255, 255) !important;
     flex-grow: 1;
     text-align: center;
 }
 
+.navbar{
+    background-color: transparent;
+}
 .profile{
     border-radius: 50px;
-    background-color: #666770bd;
+    background-color: transparent;
     cursor: pointer;
 }
 
