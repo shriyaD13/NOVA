@@ -4,6 +4,12 @@ const client = AgoraRTC.createClient({
    codec: "vp8" 
 });
 
+// create instance of whiteboard
+var whiteWebSdk = new WhiteWebSdk({
+  appIdentifier: "adwQnkOAYEeuslwN27jbq5A/5YHd686esFqNkA",
+  region: "us-sv",
+})
+
 // Initialize firebase
 firebase.initializeApp({
   apiKey: 'AIzaSyD4JjNM3eyakgrkXVg_t8nUny2jpgnWeiE',
@@ -31,6 +37,13 @@ let RTMoptions = {
     uid: uid,
     token: RTMtoken
 }
+
+let boardOptions = {
+  uuid: boardUid,
+  roomToken: boardToken
+}
+
+let whiteboardRoom;
 
 const avatar = "https://avataaars.io/?accessoriesType=Prescription02&avatarStyle=Circle&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&facialHairType=Blank&hatColor=Black&mouthType=Default&topType=LongHairFro"
 
@@ -79,8 +92,6 @@ const screenDisplay  = () =>{
   const screen = container.lastChild;
   console.log(screen);
   container.style.flexDirection = "column";
-  // console.log(document.querySelectorAll(".player_wrapper_peer"));
-  // console.log(document.querySelectorAll(".player_wrapper"));
   const elem1 = document.querySelectorAll(".player_wrapper");
   elem1.forEach((elem) =>{
     elem.style.width = "100%"
@@ -89,18 +100,45 @@ const screenDisplay  = () =>{
   elem2.forEach((elem) =>{
     elem.style.width = "100%"
   })
-  // document.querySelector(".player_wrapper").style.width = "100%";
-  // document.querySelector(".player_wrapper_peer").style.width = "100%";
   container.removeChild(container.lastChild);
   console.log(container.className);
   container.className = " d-flex ms-4 justify-content-center align-items-center";
   container.style.width="20%";
   screen.style.flexGrow = "1";
   screen.style.width = "100%"
-  // screen.style.borderRadius = "0px";
   $(".video-container").prepend(screen);
 }
 
+const displayBoard = () =>{
+  // console.log(whiteboardRoom);
+  document.getElementById("whiteboard1").style.display = "block"
+  whiteboardRoom.bindHtmlElement(document.getElementById("whiteboard1"));
+  document.querySelector('.tools_conatiner').style.display= "flex";
+  document.getElementById('remote-container').style.flexDirection = "column"
+  document.querySelector('.main_controls').style.zIndex =9;
+  document.querySelector('.main_controls').style.color = "black";
+  document.querySelector('.main_right').style.zIndex =9;
+  document.querySelector('.video-container').className = "video-container flex-grow-1 d-flex align-items-center w-100"
+  document.querySelector('.video-container').style.justifyContent = "space-between";
+  document.querySelector('.tools').style.height = "343px";
+  document.querySelector('.tools').style.width = "auto";
+  document.getElementById('remote-container').className = " d-flex ms-4 justify-content-center align-items-center";
+  document.getElementById('remote-container').style.width = "26%"
+  document.getElementById('remote-container').style.height = "65%"
+  document.querySelector('.tools_conatiner').style.width = "initial";
+  document.querySelector('.tools_conatiner').style.height = "initial";
+
+}
+
+const hideBoard = () =>{
+  document.getElementById("whiteboard1").style.display = "none"
+  document.querySelector('.tools_conatiner').style.display= "none";
+  document.getElementById('remote-container').style.flexDirection = "row"
+  document.querySelector('.main_controls').style.color = "white";
+  document.querySelector('.video-container').style.justifyContent = "center";
+  document.getElementById('remote-container').style.width = "100%"
+  document.getElementById('remote-container').style.height = "90%"
+}
 
 // Basic functions for recieving and answering requests
 const basicCalls = async() =>{
@@ -175,7 +213,18 @@ const basicCalls = async() =>{
             elem.style.width = "46%"
           })
           document.getElementById("remote-container").style.width = "100%"
-        } else {
+        } 
+        
+        // Whiteboard ui changes
+        else if(message.text === 'whiteBoardAdded'){
+            displayBoard();
+        } else if(message.text === 'whiteBoardRemoved'){
+          hideBoard();
+        }
+
+
+        else {
+
           let today = new Date();
           let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
           let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
@@ -259,6 +308,10 @@ const join = async () =>{
     .set({
       time: dateTime  
     })
+
+    // Join the whiteboard
+    whiteboardRoom = await whiteWebSdk.joinRoom(boardOptions);
+    whiteboardRoom.disableSerialization = false;
 }
 
 // End call function
@@ -454,6 +507,62 @@ $('html').keydown(async (e) => {
     text.val('')
   }
 });
+
+
+let whiteBoardState = false;
+const whiteBoard = async() =>{
+  if(!whiteBoardState){
+    channel.sendMessage({ text: 'whiteBoardAdded' }).then(() =>{
+      // document.querySelector(".whiteBoard").style.color = "red";
+      displayBoard();
+      document.querySelector(".whiteBoard").innerHTML = `Disable whiteboard`;
+      whiteBoardState = true;
+    })
+  } else {
+    channel.sendMessage({ text: 'whiteBoardRemoved' }).then(() =>{
+      // document.querySelector(".whiteBoard").style.color = "red";
+      hideBoard();
+      document.querySelector(".whiteBoard").innerHTML = `whiteboard`;
+      whiteBoardState = false;
+    })
+  }
+}
+const changeTool = (name) =>{
+  if(name === "pen"){
+    whiteboardRoom.setMemberState({currentApplianceName: "pencil"});
+    var strokeColor =[247, 10, 69]; // The color marked with RGB, here is blue
+    var strokeWidth = 4; // The thickness of the line, 10 is a very thick value
+    whiteboardRoom.setMemberState({
+        strokeColor: strokeColor,
+        strokeWidth: strokeWidth,
+    });
+    return;
+  } 
+  // console.log(name)
+  whiteboardRoom.setMemberState({currentApplianceName: name});
+  if(name === "pencil"){
+    var strokeColor =[105, 105, 105]; // The color marked with RGB, here is blue
+    var strokeWidth = 1; // The thickness of the line, 10 is a very thick value
+    whiteboardRoom.setMemberState({
+        strokeColor: strokeColor,
+        strokeWidth: strokeWidth,
+    });
+  }
+  
+}
+
+const clearScene = () =>{
+  whiteboardRoom.cleanCurrentScene();
+}
+
+const undo = () =>{
+  whiteboardRoom.undo();
+}
+const redo = () =>{
+  whiteboardRoom.redo();
+}
+
+
 
 join();
 basicCalls();

@@ -57,9 +57,9 @@ app.use((req,res,next) =>{
 app.use(cors())
 
 
-// base routre
+// // base routre
 app.get('/', (req, res) =>{
-    res.render('landingPage');
+    res.render('index');
 })
 
 
@@ -336,12 +336,25 @@ app.get('/joinCall', authorize, (req,res) =>{
 
 // waiting room
 app.get('/callWait/:id',authorize, (req,res)=>{
+
   const id = req.params.id;
   const meetingID = uuidV4();
   const meetingCode = meetingID +':'+ id;
   // console.log(meetingID);
   const meetingUrl = `https://evening-brushlands-56347.herokuapp.com/call/${meetingID}:${id}`;
-  res.render('calls/waitRoom', {id, meetingUrl, meetingCode});
+
+  
+  let uid;
+  request(options, function (error, response) {
+    if (error) throw new Error(error);
+    uid = JSON.parse(response.body).uuid;
+    db.collection('whiteboards').doc(meetingID).set({
+      board: uid
+    }).then(() =>{
+      res.render('calls/waitRoom', {id, meetingUrl, meetingCode});
+    })
+    // console.log(response.body, uid);
+  });
 })
 
 
@@ -368,6 +381,7 @@ const generateToken = (uid,channel) =>{
 // video call route
 app.get('/call/:id', authorize, async(req,res) =>{
   const id = req.params.id;
+  const meetingID = id.split(":")[0];
   const userEmail=id.split(":")[1];
   const meetName = id.split(":")[2];
   // console.log("yyyyyyyyyyyyyy",userEmail);
@@ -385,10 +399,35 @@ app.get('/call/:id', authorize, async(req,res) =>{
     const channel = meetName + " by " + host;
     const {RTMtoken, RTCtoken, screenToken} = generateToken(uid, channel);
     // console.log(RTMtoken,RTCtoken,screenToken);
-    res.render('calls/room', {RTMtoken,RTCtoken,screenToken,uid, meetName,host});
+
+    const board = await db.collection('whiteboards').doc(meetingID).get();
+    const boardUid = board.data().board;
+    // console.log(boardUid)
+
+    var options = {
+      "method": "POST",
+      "url": `https://api.netless.link/v5/tokens/rooms/${boardUid}`, 
+      "headers": {
+      "token": "NETLESSSDK_YWs9aDdOVjJjcVo3OFZaZ19CTyZub25jZT1lZjVjOTBiMC1lMDE4LTExZWItYWM5Ny0wMzc2ZWUzNmVhZTQmcm9sZT0wJnNpZz01NGJmYjgxOGFjZDI1Y2UzNDRkMTU3YTk4YmVlYTdiYzQ2YWFhOTczMzU1ZDQ4ZmYzOTkyYWEwMDZlNWIwYmQx",
+      "Content-Type": "application/json",
+      "region": "us-sv"
+      },
+      body: JSON.stringify({"lifespan":3600000,"role":"admin"})
+    
+    };
+    request(options, function (error, response) {
+      if (error) throw new Error(error);
+      const boardToken = JSON.parse(response.body);
+      // console.log(boardToken)
+      res.render('calls/room', {RTMtoken,RTCtoken,screenToken,uid, meetName,host, boardUid, boardToken});
+    });
   } else {
     res.render("error");
   }
+})
+
+app.use((err,res,req,next) =>{
+  res.render(error);
 })
 
 server.listen(process.env.PORT || 3000);
