@@ -4,8 +4,7 @@ A video chat web application
 <br>
 check it out here:- https://evening-brushlands-56347.herokuapp.com
 <br> 
-
-
+(Works best in laptops & It doesnt work with two tabs in the same browser. User should be logged in with two different accounts for it to work.)
 
 The features that NOVA provides are-
 <br>
@@ -31,5 +30,7 @@ The features that NOVA provides are-
 	
 #### Whiteboard 
 <li> Users can create interactive live whiteboard rooms to collaborate in real time
+
+
 
 
