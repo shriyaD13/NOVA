@@ -2,9 +2,9 @@
 
 // Initialize Cloud Firestore through Firebase
 firebase.initializeApp({
-  apiKey: 'AIzaSyD4JjNM3eyakgrkXVg_t8nUny2jpgnWeiE',
-  authDomain: 'nova-c68e3.firebaseapp.com',
-  projectId: 'nova-c68e3'
+  apiKey: "AIzaSyARCf1nsHmLWUYenUSQVQjJ8UG56TBTSFU",
+  authDomain: "novawebchat.firebaseapp.com",
+  projectId: "novawebchat"
 });
   
   const peerObj = JSON.parse(peerData);

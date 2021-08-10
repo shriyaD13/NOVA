@@ -14,17 +14,18 @@ const {RtcTokenBuilder, RtmTokenBuilder, RtcRole, RtmRole} = require('agora-acce
 
 
 // Firebase Configs
-  var firebaseConfig = {
-    apiKey: "AIzaSyD4JjNM3eyakgrkXVg_t8nUny2jpgnWeiE",
-    authDomain: "nova-c68e3.firebaseapp.com",
-    projectId: "nova-c68e3",
-    storageBucket: "nova-c68e3.appspot.com",
-    messagingSenderId: "1073173657353",
-    appId: "1:1073173657353:web:004e95c4c827c9c128c5d8",
-    measurementId: "G-RK7H0LFV7J"
-  };
+var firebaseConfig = {
+  apiKey: "AIzaSyARCf1nsHmLWUYenUSQVQjJ8UG56TBTSFU",
+  authDomain: "novawebchat.firebaseapp.com",
+  projectId: "novawebchat",
+  storageBucket: "novawebchat.appspot.com",
+  messagingSenderId: "174106995167",
+  appId: "1:174106995167:web:f31f3a35cab0cfafa77c6a"
+};
+
+
 firebase.initializeApp(firebaseConfig);
-const serviceAccount = require('./nova-c68e3-firebase-adminsdk-weglw-e07465e0e0.json');
+const serviceAccount = require('./novawebchat-firebase-adminsdk-5lzkv-20173ef2ad.json');
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
