@@ -61,32 +61,18 @@ Video chat application built using Agora's sdk
 
 ## Tech stack
 * [![Express][Express.js]][Express-url]
+* [![Firebase][Firebase]][Firebase-url]
 * [![Heroku][Heroku]][Heroku-url]
-* [![Vue][Vue.js]][Vue-url]
-* [![Angular][Angular.io]][Angular-url]
-* [![Svelte][Svelte.dev]][Svelte-url]
 * [![HTML][HTML]][html-url]
+* [![CSS][CSS]][css-url]
 * [![Bootstrap][Bootstrap.com]][Bootstrap-url]
 * [![JQuery][JQuery.com]][JQuery-url]
-
-
-### Tools and Languages: 
-<p align="left"> <a href="https://getbootstrap.com" target="_blank"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/bootstrap/bootstrap-plain-wordmark.svg" alt="bootstrap" width="40" height="40"/> </a> <a href="https://www.w3schools.com/css/" target="_blank"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/css3/css3-original-wordmark.svg" alt="css3" width="40" height="40"/> </a> <a href="https://expressjs.com" target="_blank"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/express/express-original-wordmark.svg" alt="express" width="40" height="40"/> </a> <a href="https://firebase.google.com/" target="_blank"> <img src="https://www.vectorlogo.zone/logos/firebase/firebase-icon.svg" alt="firebase" width="40" height="40"/> </a> <a href="https://cloud.google.com" target="_blank"> <img src="https://www.vectorlogo.zone/logos/google_cloud/google_cloud-icon.svg" alt="gcp" width="40" height="40"/> </a> <a href="https://git-scm.com/" target="_blank"> <img src="https://www.vectorlogo.zone/logos/git-scm/git-scm-icon.svg" alt="git" width="40" height="40"/> </a> <a href="https://heroku.com" target="_blank"> <img src="https://www.vectorlogo.zone/logos/heroku/heroku-icon.svg" alt="heroku" width="40" height="40"/> </a> <a href="https://www.w3.org/html/" target="_blank"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original-wordmark.svg" alt="html5" width="40" height="40"/> </a> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="javascript" width="40" height="40"/> </a> <a href="https://www.mongodb.com/" target="_blank"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mongodb/mongodb-original-wordmark.svg" alt="mongodb" width="40" height="40"/> </a> <a href="https://nodejs.org" target="_blank"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original-wordmark.svg" alt="nodejs" width="40" height="40"/> </a> <a href="https://sass-lang.com" target="_blank"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/sass/sass-original.svg" alt="sass" width="40" height="40"/> </a> <a href="https://www.tensorflow.org" target="_blank"> <img src="https://www.vectorlogo.zone/logos/tensorflow/tensorflow-icon.svg" alt="tensorflow" width="40" height="40"/> </a> </p>
-
-## Points to remember while testing the app
-
-1. Allow **permissions** for camera and mic
-2. In case any **user is not broadcasted** it is probably due to server overload, **REFRESH** the window to solve this. 
-3. Make sure the **URL** is starting with https
-4. While **scheduling a meet** make sure the start and end date follow a logical sequence or else it’ll show an error. 
-5. While testing the **Posture** bot, allow permissions for the camera and allow **notifications**, and **REFRESH** the page for changes to take effect. 
-6. Wait for the model to analyze, and check for **notifications** 
 
 ## Instructions
 
 
-1. `git clone https://github.com/Apurva-tech/unite.git` 
-2. `cd ./unite`
+1. `git clone https://github.com/shriyaD13/NOVA.git` 
+2. `cd ./NOVA`
 3. Install node dependencies 
    - `npm install`
 4. Replace firebase API keys with your configurations
@@ -94,45 +80,22 @@ Video chat application built using Agora's sdk
    - Add relevant credentials
    - `cp .env.example .env` 
 5. `npm run dev`
-6. The app is now running at http://localhost:3030/landing 
-
-
-## Useful Links
-
-- [Deployed Website](https://unite-apurva.herokuapp.com/landing)
-- [Demo Video](https://youtu.be/OKKK1GOnlIU)
-- [Sprint Document](https://docs.google.com/presentation/d/11k8pLJPEV-XJwxIX4ysW9fKmHqFEZHcUWizFcFyVsns/edit?usp=sharing)
-- [Design Document](https://docs.google.com/document/d/1IJcEbbhsbQna-tgcnfV_9_RhXQi4SURlrl3-0HypArE/edit?usp=sharing)
+6. The app is now running at http://localhost:5000
 
 ## Need help?
 
-Feel free to contact me on [LinkedIn](https://www.linkedin.com/in/apurva866/) 
+Feel free to contact me on [LinkedIn](https://www.linkedin.com/in/shriya-dixit1308/) 
 
-[![Instagram](https://img.shields.io/badge/Instagram-follow-purple.svg?logo=instagram&logoColor=white)](https://www.instagram.com/mind.wrapper/) [![Twitter](https://img.shields.io/badge/Twitter-follow-blue.svg?logo=twitter&logoColor=white)](https://twitter.com/mindwrapper) [![Medium](https://img.shields.io/badge/Medium-follow-black.svg?logo=medium&logoColor=white)](https://medium.com/@apurva866)
-
----------
-
-```javascript
-
-if (youEnjoyed) {
-    starThisRepository();
-}
-
-```
-
------------
 [Express.js]: https://img.shields.io/badge/Express.js-404D59?style=for-the-badge
 [Express-url]:https://expressjs.com/
 [Heroku]: https://img.shields.io/badge/Heroku-430098?style=for-the-badge&logo=heroku&logoColor=white
 [Heroku-url]: https://www.heroku.com/home
 [HTML]: https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white
-[html-url]: https://html.com/
-[Angular.io]: https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white
-[Angular-url]: https://angular.io/
-[Svelte.dev]: https://img.shields.io/badge/Svelte-4A4A55?style=for-the-badge&logo=svelte&logoColor=FF3E00
-[Svelte-url]: https://svelte.dev/
-[Laravel.com]: https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white
-[Laravel-url]: https://laravel.com
+[html-url]: https://www.w3schools.com/html/
+[CSS]: https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white
+[css-url]: https://angular.io/
+[Firebase]: https://img.shields.io/badge/Firebase-FFA116?style=for-the-badge&logo=Firebase&logoColor=white
+[Firebase-url]: https://firebase.google.com/?gclsrc=ds&gclsrc=ds&gclid=CMjiht7A7fsCFYmtjgodEfAO3A
 [Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
 [Bootstrap-url]: https://getbootstrap.com
 [JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
